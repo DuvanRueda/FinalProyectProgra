@@ -17,4 +17,8 @@ public class IOManager {
     public String inputData(String message){
         return JOptionPane.showInputDialog(message);
     }
+
+    public int bouttonQuestion(String message, String titule, Object[] options) {
+        return JOptionPane.showOptionDialog(null, message, titule, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
+    }
 }

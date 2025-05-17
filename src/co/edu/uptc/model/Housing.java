@@ -6,6 +6,8 @@ package co.edu.uptc.model;
  */
 public class Housing {
     
+    private final String ADMIN_NAME = "Admin";
+    private final String ADMIN_PASSWORD = "soyElAdmin231";
     private Room normalRooms[][];
     private Room vipRooms[][];
     private Room premiunRooms[][];
@@ -51,5 +53,13 @@ public class Housing {
                 rooms[i][j] = new Room("Cabaña" + typeRoom + (i+j+1));
             }
         }
+    }
+
+    public String getADMIN_NAME() {
+        return ADMIN_NAME;
+    }
+
+    public String getADMIN_PASSWORD() {
+        return ADMIN_PASSWORD;
     }
 }
