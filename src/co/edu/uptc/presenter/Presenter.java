@@ -75,10 +75,8 @@ public class Presenter {
     }
 
     public void init() {
-        // objectIOManager.showMessage("El siguiente programa esta pensado para que el
-        // alojamiento cuente con sistema de \nreview y pueda tener retroalimentación
-        // por parte de los huespedes.");
-        // createRooms();
+        objectIOManager.showMessage("El siguiente programa esta pensado para que el alojamiento cuente con sistema de \nreview y pueda tener retroalimentación por parte de los huespedes.");
+        createRooms();
         menuLog();
     }
 
