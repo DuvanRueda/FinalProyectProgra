@@ -9,13 +9,13 @@ public class Room {
     private String roomName;
     private String password; 
     private boolean isFree;
-    private Review reviewsRoom;
+    private Comment commentsRoom;
 
     public Room (String roomName) {
         this.roomName = roomName;
         password = "";
         isFree = true;
-        reviewsRoom = new Review();
+        commentsRoom = new Comment();
     }
 
     public String getRoomName() {
