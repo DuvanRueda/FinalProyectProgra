@@ -21,4 +21,9 @@ public class IOManager {
     public int bouttonQuestion(String message, String titule, Object[] options) {
         return JOptionPane.showOptionDialog(null, message, titule, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
     }
+
+    public String inputList(String message, String title, String[] options) {
+        String action = String.valueOf(JOptionPane.showInputDialog(null, message, title, -1, null, options, null));
+        return action;
+    }
 }
