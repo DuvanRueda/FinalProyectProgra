@@ -68,6 +68,7 @@ public class Presenter {
                             isOffApplication = true;
                         } else
                             objectIOManager.showMessage("Las credenciales estan mal, lo devolveremos al menu de loggeo.");
+                            isOffApplication = false;
                     }
                     break;
             }
