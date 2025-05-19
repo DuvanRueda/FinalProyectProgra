@@ -19,13 +19,21 @@ public class VIPRoom extends Room {
         interiorRate = 0;
     }
 
+    public void interiorRating(double newInteriorRate){
+        if (interiorRate != 0) {
+            interiorRate = (interiorRate+newInteriorRate)/2;
+        }else{
+            interiorRate = newInteriorRate;
+        }
+    }
+
     @Override
     public String makeRating(double[] ratings){
         cleaningRating(ratings[0]);
         comfortRating(ratings[1]);
         locationRating(ratings[2]);
         customerServiceRating(ratings[3]);
-        customerServiceRating(ratings[4]);
+        qualityRating(ratings[4]);
         servicesRating(ratings[5]);
         interiorRating(ratings[6]);
         generalRating();
@@ -41,12 +49,17 @@ public class VIPRoom extends Room {
         setGeneralRate(temp);
     }
 
-    public void interiorRating(double newInteriorRate){
-        if (interiorRate != 0) {
-            interiorRate = (interiorRate+newInteriorRate)/2;
-        }else{
-            interiorRate = newInteriorRate;
-        }
+    @Override
+    public String myToString() {
+        return "Estadisticas cabaña " + getRoomName() +
+                "\nLimpieza: " + getCleaningRate() + 
+                "\nComodidad: " + getComfortRate() + 
+                "\nUbicación de la habitación: " + getLocationRate() + 
+                "\nAtención del personal: " + getCustomerServiceRate() + 
+                "\nRelacion calidad/precio: " + getQualityRate() + 
+                "\nFuncionabilidad de los servicios de la habitación: " + getServicesRate() +
+                "\nInterior de la habitación: " + interiorRate + 
+                "\nGeneral: " + getGeneralRate();
     }
 
     public String[] getSentences() {

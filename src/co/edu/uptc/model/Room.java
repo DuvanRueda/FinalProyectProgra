@@ -46,7 +46,7 @@ public class Room {
         comfortRating(ratings[1]);
         locationRating(ratings[2]);
         customerServiceRating(ratings[3]);
-        customerServiceRating(ratings[4]);
+        qualityRating(ratings[4]);
         servicesRating(ratings[5]);
         generalRating();
         return "Entrega de habitación exitosa, la habitación: " + roomName + " esta libre.";
@@ -107,6 +107,17 @@ public class Room {
         } else {
             servicesRate = newServiceRate;
         }
+    }
+
+    public String myToString() {
+        return "Estadisticas cabaña " + roomName +
+                "\nLimpieza: " + cleaningRate + 
+                "\nComodidad: " + comfortRate + 
+                "\nUbicación de la habitación: " + locationRate + 
+                "\nAtención del personal: " + customerServiceRate + 
+                "\nRelacion calidad/precio: " + qualityRate + 
+                "\nFuncionabilidad de los servicios de la habitación: " + servicesRate + 
+                "\nGeneral: " + generalRate;
     }
 
     public String getRoomName() {
