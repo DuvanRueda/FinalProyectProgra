@@ -25,7 +25,8 @@ public class AdminPresenter {
                 case 1:
                     return showRatingTypeRoom();
                 case 2:
-                    return "La calificación global del establecimiento es de: " + objetcHousing.getGlobalRate();
+                    objectIOManager.showMessage("La calificación global del establecimiento es de: " + objetcHousing.getGlobalRate());
+                    return showGlobalComments();
                 default:
                     exitMenu = false;
                     return "Saliendo al menu general.";
@@ -51,13 +52,20 @@ public class AdminPresenter {
         }
     }
 
+    public String showGlobalComments() {
+        int actionInt = objectIOManager.bouttonQuestion("¿Desea revisar todos los comentarios de este tipo de habitaciones?", null, new String[]{"SI", "NO"});
+        if (actionInt == 0){
+            return objetcHousing.showGlobalComments();
+        } else
+            return "Saliendo al menu principal del Administrador.";
+    }
+
     public String showCommentsTypeRoom(char typeRoom) {
         int actionInt = objectIOManager.bouttonQuestion("¿Desea revisar todos los comentarios de este tipo de habitaciones?", null, new String[]{"SI", "NO"});
         if (actionInt == 0){
             return objetcHousing.showCommentsTypeRoom(typeRoom);
         } else
             return "Saliendo al menu principal del Administrador.";
-
     }
     
     public String showRate() {

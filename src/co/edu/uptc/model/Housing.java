@@ -94,6 +94,13 @@ public class Housing {
         return "";
     }
 
+    public String showGlobalComments() {
+        String commentsNormal = showCommentsTypeRoom(normalRooms);
+        String commentsVIP = showCommentsTypeRoom(VIPRooms);
+        String commentsPremiun = showCommentsTypeRoom(premiumRooms);
+        return commentsNormal + commentsVIP + commentsPremiun; 
+    }
+
     public String showCommentsTypeRoom(char typeRoom) {
         if (typeRoom == 'N') {
             return showCommentsTypeRoom(normalRooms);
