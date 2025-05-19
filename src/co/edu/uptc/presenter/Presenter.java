@@ -42,7 +42,7 @@ public class Presenter {
     public void createRooms() {
         requestNumberRooms("Normales");
         requestNumberRooms("VIP");
-        requestNumberRooms("Premiun");
+        requestNumberRooms("Premium");
     }
 
     public void menuLog() {
@@ -92,20 +92,23 @@ public class Presenter {
     }
 
     public String bookking() {
-        action = objectIOManager.inputList("¿Qué tipo de habitación desea reservar?", "RESERVA DE HABITACIONES.", new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premiun." }).charAt(11);
+        action = objectIOManager.inputList("¿Qué tipo de habitación desea reservar?", "RESERVA DE HABITACIONES.", new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." }).charAt(11);
         switch (action) {
             case 'N':
-                password = objectIOManager
-                        .inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
+                if (!objectHousing.verifyAvailability("Normal"))
+                    return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
+                password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
                 return objectHousing.bookking("Normal",password);
             case 'V':
-                password = objectIOManager
-                        .inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
+            if (!objectHousing.verifyAvailability("VIP"))
+                    return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
+                password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
                 return objectHousing.bookking("vip", password);
             case 'P':
-                password = objectIOManager
-                        .inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
-                return objectHousing.bookking("Premiun",password);
+                if (!objectHousing.verifyAvailability("Premiun"))
+                    return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
+                password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
+                return objectHousing.bookking("Premium",password);
             default:
                 return "Saliendo del menu de cliente.";
         }
@@ -113,7 +116,7 @@ public class Presenter {
 
     public String returnRoom() {
         String nameRoom = "";
-        action = objectIOManager.inputList("¿Qué tipo de habitación desea entregar?", "ENTREGA DE HABITACIONES.", new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premiun." }).charAt(11);
+        action = objectIOManager.inputList("¿Qué tipo de habitación desea entregar?", "ENTREGA DE HABITACIONES.", new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." }).charAt(11);
         switch (action) {
             case 'N':
                 nameRoom = objectIOManager.inputData("Ingrese el nombre de su habitacion");
@@ -126,7 +129,7 @@ public class Presenter {
                 case 'P':
                 nameRoom = objectIOManager.inputData("Ingrese el nombre de su habitacion");
                 password = objectIOManager.inputData("Ingrese la contraseña de su habitación.");
-                return objectHousing.returnRoom(nameRoom, "premiun", password);
+                return objectHousing.returnRoom(nameRoom, "premium", password);
             default:
                 return "Saliendo del menu de cliente.";
         }
@@ -147,8 +150,6 @@ public class Presenter {
     }
 
     public void init() {
-        objectIOManager.showMessage("El siguiente programa esta pensado para que el alojamiento cuente con sistema de \nreview y pueda tener retroalimentación por parte de los huespedes.");
-        createRooms();
         objectIOManager.showMessage("El siguiente programa esta pensado para que el alojamiento cuente con sistema de \nreview y pueda tener retroalimentación por parte de los huespedes.");
         createRooms();
         menuLog();
