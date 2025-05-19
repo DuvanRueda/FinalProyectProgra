@@ -1,6 +1,7 @@
 package co.edu.uptc.presenter;
 
 import co.edu.uptc.model.Housing;
+import co.edu.uptc.model.Room;
 import co.edu.uptc.view.IOManager;
 
 /*
@@ -84,7 +85,7 @@ public class Presenter {
             case 'R':
                 return bookking();
             case 'E':
-                return returnRoom();
+                return returnRoomMenu();
 
             default:
                 return "Saliendo del menu del cliente";
@@ -103,7 +104,7 @@ public class Presenter {
             if (!objectHousing.verifyAvailability("VIP"))
                     return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
                 password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
-                return objectHousing.bookking("vip", password);
+                return objectHousing.bookking("VIP", password);
             case 'P':
                 if (!objectHousing.verifyAvailability("Premiun"))
                     return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
@@ -114,25 +115,76 @@ public class Presenter {
         }
     }
 
-    public String returnRoom() {
-        String nameRoom = "";
-        action = objectIOManager.inputList("¿Qué tipo de habitación desea entregar?", "ENTREGA DE HABITACIONES.", new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." }).charAt(11);
+    public String returnRoomMenu() {
+                String nameRoom = "";
+                action = objectIOManager.inputList("¿Qué tipo de habitación desea entregar?", "ENTREGA DE HABITACIONES.", new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." }).charAt(11);
         switch (action) {
             case 'N':
                 nameRoom = objectIOManager.inputData("Ingrese el nombre de su habitacion");
                 password = objectIOManager.inputData("Ingrese la contraseña de su habitación.");
-                return objectHousing.returnRoom(nameRoom, "Normal",password);
-                case 'V':
+                return returnNormalRoom(nameRoom, password);   
+            case 'V':
                 nameRoom = objectIOManager.inputData("Ingrese el nombre de su habitacion");
                 password = objectIOManager.inputData("Ingrese la contraseña de su habitación.");
-                return objectHousing.returnRoom(nameRoom, "vip", password);
-                case 'P':
+                return returnVIPRoom(nameRoom, password);
+            case 'P':
                 nameRoom = objectIOManager.inputData("Ingrese el nombre de su habitacion");
                 password = objectIOManager.inputData("Ingrese la contraseña de su habitación.");
-                return objectHousing.returnRoom(nameRoom, "premium", password);
+                return returnPremiumRoom(nameRoom, password);
             default:
                 return "Saliendo del menu de cliente.";
         }
+    }
+
+    public String returnNormalRoom(String nameRoom, String password) {
+        if (objectHousing.returnNormalRoom(nameRoom,password)){
+            objectIOManager.showMessage("Credenciales correectas, procederemos a hacerle la evaluacion de satisfaccion.");
+            return normalRating(nameRoom);
+        } else 
+            return "El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
+    }
+
+    public String returnVIPRoom(String nameRoom, String password) {
+        if (objectHousing.returnVIPRoom(nameRoom,password)){
+            objectIOManager.showMessage("Credenciales correectas, procederemos a hacerle la evaluacion de satisfaccion.");
+            return VIPRating(nameRoom);
+        } else 
+            return "El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
+    }
+
+    public String returnPremiumRoom(String nameRoom, String password) {
+        if (objectHousing.returnPremiumRoom(nameRoom,password)){
+            objectIOManager.showMessage("Credenciales correectas, procederemos a hacerle la evaluacion de satisfaccion.");
+            return PremiumRating(nameRoom);
+        } else 
+            return "El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
+    }
+
+    public String normalRating(String nameRoom) {
+        double[] ratings = new double[6];
+        String[] sentences = objectHousing.getNormalRooms()[0][0].getSentences();
+        for (int i = 0; i < 6; i++) {
+            ratings[i] = Double.parseDouble(objectIOManager.inputData(sentences[i]));
+        }
+        return objectHousing.normalRating(ratings, nameRoom);
+    }
+
+    public String VIPRating(String nameRoom) {
+        double[] ratings = new double[7];
+        String[] sentences = objectHousing.getVIPRooms()[0][0].getSentences();
+        for (int i = 0; i < 7; i++) {
+            ratings[i] = Double.parseDouble(objectIOManager.inputData(sentences[i]));
+        }
+        return objectHousing.VIPRating(ratings, nameRoom);
+    }
+
+    public String PremiumRating(String nameRoom) {
+        double[] ratings = new double[8];
+        String[] sentences = objectHousing.getPremiumRooms()[0][0].getSentences();
+        for (int i = 0; i < 8; i++) {
+            ratings[i] = Double.parseDouble(objectIOManager.inputData(sentences[i]));
+        }
+        return objectHousing.premiumRating(ratings, nameRoom);
     }
 
     public boolean exit() {

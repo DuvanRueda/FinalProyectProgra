@@ -19,12 +19,13 @@ public class Room {
     private double qualityRate;
     private double servicesRate;
     private String[] sentences = new String[] {
-            "Del 1 al 5, ¿cómo calificarías la limpieza?",
-            "Del 1 al 5, ¿cómo calificarías la limpieza?", "Del 1 al 5, ¿cómo calificarías la comodidad?",
+            "Del 1 al 5, ¿cómo calificarías la limpieza?", 
+            "Del 1 al 5, ¿cómo calificarías la comodidad?",
             "Del 1 al 5, ¿cómo calificarías la ubicación de la habitacíon?",
             "Del 1 al 5, ¿cómo calificarías la atención del personal?",
             "Del 1 al 5, ¿cómo calificarías la relación calidad/precio?",
-            "Del 1 al 5, ¿cómo calificarías la funcionalidad de los servicios en la habitación?" };
+            "Del 1 al 5, ¿cómo calificarías la funcionalidad de los servicios en la habitación?" 
+        };
 
     public Room(String roomName) {
         this.roomName = roomName;
@@ -40,7 +41,17 @@ public class Room {
         servicesRate = 0;
     }
 
-    public void makeRating() {
+    public String makeRating(double[] ratings) {
+        cleaningRating(ratings[0]);
+        comfortRating(ratings[1]);
+        locationRating(ratings[2]);
+        customerServiceRating(ratings[3]);
+        customerServiceRating(ratings[4]);
+        servicesRating(ratings[5]);
+        generalRating();
+        return "Entrega de habitación exitosa, la habitación: " + roomName + " esta libre.";
+    }
+    public void generalRating() {
         double temp = (cleaningRate + comfortRate + locationRate + customerServiceRate + qualityRate + servicesRate)
                 / 6;
         if (generalRate != 0) {

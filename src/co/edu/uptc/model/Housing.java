@@ -9,18 +9,51 @@ public class Housing {
     private final String ADMIN_NAME = "Admin";
     private final String ADMIN_PASSWORD = "soyElAdmin231";
     private Room normalRooms[][];
-    private VIPRoom vipRooms[][];
+    private VIPRoom VIPRooms[][];
     private PremiumRoom premiumRooms[][];
 
     public Housing(){
 
     }
 
+    public String normalRating(double[] ratings, String nameRoom) {
+        for (int i = 0; i < normalRooms.length; i++) {
+            for (int j = 0; j < normalRooms[0].length; j++) {
+                if (normalRooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
+                    return normalRooms[i][j].makeRating(ratings);
+                }
+            }
+        }
+        return "";
+    }
+
+    public String VIPRating(double[] ratings, String nameRoom) {
+        for (int i = 0; i < VIPRooms.length; i++) {
+            for (int j = 0; j < VIPRooms[0].length; j++) {
+                if (VIPRooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
+                    return VIPRooms[i][j].makeRating(ratings);
+                }
+            }
+        }
+        return "";
+    }
+
+    public String premiumRating(double[] ratings, String nameRoom) {
+        for (int i = 0; i < premiumRooms.length; i++) {
+            for (int j = 0; j < premiumRooms[0].length; j++) {
+                if (premiumRooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
+                    return premiumRooms[i][j].makeRating(ratings);
+                }
+            }
+        }
+        return "";
+    }
+
     public boolean verifyAvailability(String typeRoom) {
         if (typeRoom.equalsIgnoreCase("Normal")) {
             return verifyAvailability(normalRooms);
         } else if (typeRoom.equalsIgnoreCase("VIP")){
-            return verifyAvailability(vipRooms);
+            return verifyAvailability(VIPRooms);
         } else 
             return verifyAvailability(premiumRooms);
     }
@@ -60,8 +93,8 @@ public class Housing {
         creatreRooms(normalRooms);
     }
     public void initVipRooms(int rows, int columns){
-        vipRooms = new VIPRoom[rows][rows];
-        creatreVIPRooms(vipRooms);
+        VIPRooms = new VIPRoom[rows][rows];
+        creatreVIPRooms(VIPRooms);
     }
     public void initPremiumRooms(int rows, int columns){
         premiumRooms = new PremiumRoom[rows][columns];
@@ -100,7 +133,7 @@ public class Housing {
         if (typeRoom.equalsIgnoreCase("Normal")) {
             return bookkingRoom(password, normalRooms);
         } else if (typeRoom.equalsIgnoreCase("vip")) {
-            return bookkingRoom(password, vipRooms);
+            return bookkingRoom(password, VIPRooms);
         } else {
             return bookkingRoom(password, premiumRooms);
         }
@@ -120,28 +153,43 @@ public class Housing {
         return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
     }
 
-    public String returnRoom(String nameRoom, String typeRoom, String password) {
-        if (typeRoom.equalsIgnoreCase("Normal")) {
-            return returnRoom(nameRoom, password, normalRooms);
-        } else if (typeRoom.equalsIgnoreCase("vip")) {
-            return returnRoom(nameRoom, password, vipRooms);
-        } else {
-            return returnRoom(nameRoom, password, premiumRooms);
-        }
-    }
-
-    public String returnRoom(String nameRoom, String password, Room[][] rooms) {
-        for (int i = 0; i < rooms.length; i++) {
-            for (int j = 0; j < rooms[0].length; j++) {
-                if (!rooms[i][j].isFree() && rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom) && rooms[i][j].getPassword().equals(password)) {
-                    String roomName = rooms[i][j].getRoomName();
-                    rooms[i][j].setPassword("");
-                    rooms[i][j].setFree(true);
-                    return "Entrega de habitación exitosa, la habitación: " + roomName + " esta libre."; 
+    public boolean returnNormalRoom(String nameRoom, String password) {
+        for (int i = 0; i < normalRooms.length; i++) {
+            for (int j = 0; j < normalRooms[0].length; j++) {
+                if (!normalRooms[i][j].isFree() && normalRooms[i][j].getRoomName().equalsIgnoreCase(nameRoom) && normalRooms[i][j].getPassword().equals(password)) {
+                    normalRooms[i][j].setPassword("");
+                    normalRooms[i][j].setFree(true);
+                    return true;//"Credenciales correctas, procederemos ha hacerte la encuestga de satisfacción";
                 } 
             }
         }        
-        return "El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
+        return false;//"El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
+    }
+
+    public boolean returnVIPRoom(String nameRoom, String password) {
+        for (int i = 0; i < VIPRooms.length; i++) {
+            for (int j = 0; j < VIPRooms[0].length; j++) {
+                if (!VIPRooms[i][j].isFree() && VIPRooms[i][j].getRoomName().equalsIgnoreCase(nameRoom) && VIPRooms[i][j].getPassword().equals(password)) {
+                    VIPRooms[i][j].setPassword("");
+                    VIPRooms[i][j].setFree(true);
+                    return true; //"Entrega de habitación exitosa, la habitación: " + roomName + " esta libre."; 
+                } 
+            }
+        }        
+        return false;//"El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
+    }
+
+    public boolean returnPremiumRoom(String nameRoom, String password) {
+        for (int i = 0; i < premiumRooms.length; i++) {
+            for (int j = 0; j < premiumRooms[0].length; j++) {
+                if (!premiumRooms[i][j].isFree() && premiumRooms[i][j].getRoomName().equalsIgnoreCase(nameRoom) && premiumRooms[i][j].getPassword().equals(password)) {
+                    premiumRooms[i][j].setPassword("");
+                    premiumRooms[i][j].setFree(true);
+                    return true; //"Entrega de habitación exitosa, la habitación: " + roomName + " esta libre."; 
+                } 
+            }
+        }        
+        return false; //"El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
     }
 
     public String getADMIN_NAME() {
@@ -151,4 +199,29 @@ public class Housing {
     public String getADMIN_PASSWORD() {
         return ADMIN_PASSWORD;
     }
+
+    public Room[][] getNormalRooms() {
+        return normalRooms;
+    }
+
+    public VIPRoom[][] getVIPRooms() {
+        return VIPRooms;
+    }
+
+    public PremiumRoom[][] getPremiumRooms() {
+        return premiumRooms;
+    }
+
+    public void setNormalRooms(Room[][] normalRooms) {
+        this.normalRooms = normalRooms;
+    }
+
+    public void setVIPRooms(VIPRoom[][] vIPRooms) {
+        VIPRooms = vIPRooms;
+    }
+
+    public void setPremiumRooms(PremiumRoom[][] premiumRooms) {
+        this.premiumRooms = premiumRooms;
+    }
+
 }
