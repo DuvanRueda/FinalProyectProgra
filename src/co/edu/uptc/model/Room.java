@@ -18,7 +18,7 @@ public class Room {
     private double customerServiceRate;
     private double qualityRate;
     private double servicesRate;
-    private String[] sentences = new String[] {
+    private final String[] SENTENCES = new String[] {
             "Del 1 al 5, ¿cómo calificarías la limpieza?", 
             "Del 1 al 5, ¿cómo calificarías la comodidad?",
             "Del 1 al 5, ¿cómo calificarías la ubicación de la habitacíon?",
@@ -125,22 +125,19 @@ public class Room {
     }
 
     public String myToString() {
+        System.out.println(generalRate);
         return "Estadisticas cabaña " + roomName +
-                "\nLimpieza: " + cleaningRate + 
-                "\nComodidad: " + comfortRate + 
-                "\nUbicación de la habitación: " + locationRate + 
-                "\nAtención del personal: " + customerServiceRate + 
-                "\nRelacion calidad/precio: " + qualityRate + 
-                "\nFuncionabilidad de los servicios de la habitación: " + servicesRate + 
-                "\nGeneral: " + generalRate;
+                "\nLimpieza: " + String.format("%.1f",cleaningRate) + 
+                "\nComodidad: " + String.format("%.1f",comfortRate) + 
+                "\nUbicación de la habitación: " + String.format("%.1f",locationRate) + 
+                "\nAtención del personal: " + String.format("%.1f",customerServiceRate) + 
+                "\nRelacion calidad/precio: " + String.format("%.1f",qualityRate) + 
+                "\nFuncionabilidad de los servicios de la habitación: " + String.format("%.1f",servicesRate) + 
+                "\nGeneral: " + String.format("%.1f",generalRate);
     }
 
     public String getRoomName() {
         return roomName;
-    }
-
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
     }
 
     public String getPassword() {
@@ -163,10 +160,6 @@ public class Room {
         return commentsRoom;
     }
 
-    public void setCommentsRoom(Comment commentsRoom) {
-        this.commentsRoom = commentsRoom;
-    }
-
     public void addComment(String comment) {
         commentsRoom.addComment(comment);
     }
@@ -183,51 +176,27 @@ public class Room {
         return cleaningRate;
     }
 
-    public void setCleaningRate(double cleaningRate) {
-        this.cleaningRate = cleaningRate;
-    }
-
     public double getComfortRate() {
         return comfortRate;
-    }
-
-    public void setComfortRate(double comfortRate) {
-        this.comfortRate = comfortRate;
     }
 
     public double getLocationRate() {
         return locationRate;
     }
 
-    public void setLocationRate(double locationRate) {
-        this.locationRate = locationRate;
-    }
-
     public double getCustomerServiceRate() {
         return customerServiceRate;
-    }
-
-    public void setCustomerServiceRate(double customerServiceRate) {
-        this.customerServiceRate = customerServiceRate;
     }
 
     public double getQualityRate() {
         return qualityRate;
     }
 
-    public void setQualityRate(double qualityRate) {
-        this.qualityRate = qualityRate;
-    }
-
     public double getServicesRate() {
         return servicesRate;
     }
 
-    public void setServicesRate(double servicesRate) {
-        this.servicesRate = servicesRate;
-    }
-
-    public String[] getSentences() {
-        return sentences;
+    public String[] getSENTENCES() {
+        return SENTENCES;
     }
 }

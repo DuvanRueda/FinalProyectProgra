@@ -3,7 +3,7 @@ package co.edu.uptc.model;
 public class VIPRoom extends Room {
 
     private double interiorRate;
-    private String[] sentences = new String[] {
+    private final String[] SENTENCES = new String[] {
             "Del 1 al 5, ¿cómo calificarías la limpieza?", 
             "Del 1 al 5, ¿cómo calificarías la comodidad?",
             "Del 1 al 5, ¿cómo calificarías la ubicación de la habitacíon?",
@@ -52,22 +52,18 @@ public class VIPRoom extends Room {
     @Override
     public String myToString() {
         return "Estadisticas cabaña " + getRoomName() +
-                "\nLimpieza: " + getCleaningRate() + 
-                "\nComodidad: " + getComfortRate() + 
-                "\nUbicación de la habitación: " + getLocationRate() + 
-                "\nAtención del personal: " + getCustomerServiceRate() + 
-                "\nRelacion calidad/precio: " + getQualityRate() + 
-                "\nFuncionabilidad de los servicios de la habitación: " + getServicesRate() +
-                "\nInterior de la habitación: " + interiorRate + 
-                "\nGeneral: " + getGeneralRate();
+                "\nLimpieza: " + String.format("%.1f",getCleaningRate()) + 
+                "\nComodidad: " + String.format("%.1f",getComfortRate()) + 
+                "\nUbicación de la habitación: " + String.format("%.1f",getLocationRate()) + 
+                "\nAtención del personal: " + String.format("%.1f",getCustomerServiceRate()) + 
+                "\nRelacion calidad/precio: " + String.format("%.1f",getQualityRate()) + 
+                "\nFuncionabilidad de los servicios de la habitación: " + String.format("%.1f",getServicesRate()) +
+                "\nInterior de la habitación: " + String.format("%.1f",interiorRate) + 
+                "\nGeneral: " + String.format("%.1f",getGeneralRate());
     }
 
-    public String[] getSentences() {
-        return sentences;
-    }
-
-    public void setSentences(String[] sentences) {
-        this.sentences = sentences;
+    public String[] getSENTENCES() {
+        return SENTENCES;
     }
 
     public double getInteriorRate() {
