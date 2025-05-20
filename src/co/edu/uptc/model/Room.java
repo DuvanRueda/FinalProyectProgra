@@ -41,6 +41,21 @@ public class Room {
         servicesRate = 0;
     }
 
+    public boolean verifyPassword(String password) {
+        String passwordRegex = "^(?=(?:[^A-Za-záéíóúÁÉÍÓÚñÑ]*[A-Za-záéíóúÁÉÍÓÚñÑ]){3,})(?=(?:[^0-9]*[0-9]){2,})[A-Za-záéíóúÁÉÍÓÚñÑ0-9]+$";
+        if (password.matches(passwordRegex)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean verifyRate(double rate){
+        if (rate >= 1 && rate <= 5) {
+            return true;
+        }
+        return false;
+    }
+
     public String makeRating(double[] ratings) {
         cleaningRating(ratings[0]);
         comfortRating(ratings[1]);

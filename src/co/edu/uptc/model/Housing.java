@@ -7,7 +7,7 @@ package co.edu.uptc.model;
 public class Housing {
     
     private final String ADMIN_NAME = "Admin";
-    private final String ADMIN_PASSWORD = "soyElAdmin231";
+    private final String ADMIN_PASSWORD = "soy"; //ElAdmin231
     private Room normalRooms[][];
     private VIPRoom VIPRooms[][];
     private PremiumRoom premiumRooms[][];
@@ -140,10 +140,10 @@ public class Housing {
         return "No se encontro la habitacion que buscas";
     }
 
-    public boolean verifyAvailability(String typeRoom) {
-        if (typeRoom.equalsIgnoreCase("Normal")) {
+    public boolean verifyAvailability(char typeRoom) {
+        if (typeRoom == 'N') {
             return verifyAvailability(normalRooms);
-        } else if (typeRoom.equalsIgnoreCase("VIP")){
+        } else if (typeRoom == 'V'){
             return verifyAvailability(VIPRooms);
         } else 
             return verifyAvailability(premiumRooms);
@@ -220,10 +220,10 @@ public class Housing {
         }
     }
 
-    public String bookking(String typeRoom, String password) {
-        if (typeRoom.equalsIgnoreCase("Normal")) {
+    public String bookking(char typeRoom, String password) {
+        if (typeRoom == 'N') {
             return bookkingRoom(password, normalRooms);
-        } else if (typeRoom.equalsIgnoreCase("vip")) {
+        } else if (typeRoom == 'V') {
             return bookkingRoom(password, VIPRooms);
         } else {
             return bookkingRoom(password, premiumRooms);
