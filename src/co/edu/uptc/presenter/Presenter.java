@@ -85,16 +85,6 @@ public class Presenter {
         return false;
     }
 
-    public boolean adminLog() {
-        String nameUser = objectIOManager.inputData("Ingrese su nombre de usuario.");
-        String passwordUser = objectIOManager.inputData("Ingrese la contraseña.");
-        if (objectHousing.getADMIN_NAME().equals(nameUser) && objectHousing.getADMIN_PASSWORD().equals(passwordUser)) {
-            return true;
-        } else
-            objectIOManager.showMessage("Las credenciales estan mal, lo devolveremos al menu de loggeo.");
-        return false;
-    }
-
     // Parte de los menus del cliente.
     public String clientMenu() {
         boolean exitMenu = false;
@@ -131,12 +121,12 @@ public class Presenter {
 
     public String bookking(char typeRoom) {
         if (!objectHousing.verifyAvailability(typeRoom))
-                    return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
-                password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.");
-                if (!objectHousing.getNormalRooms()[0][0].verifyPassword(password)) {
-                    return "La contraseña no cumple con los requisitos pedidos";
-                }
-                return objectHousing.bookking(typeRoom, password);
+            return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
+        password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.\nLa contraseña debe ca¿ontar con minimo 3 letras y 2 numeros.");
+        if (!objectHousing.getNormalRooms()[0][0].verifyPassword(password)) {
+            return "La contraseña no cumple con los requisitos pedidos";
+        }
+        return objectHousing.bookking(typeRoom, password);
     }
 
     public String returnRoomMenu() {
@@ -201,23 +191,41 @@ public class Presenter {
 
     // Parte de los metodos del Administrador.
 
+    public void warningItem() {
+        resultProcess = objectHousing.automaticWarning();
+        if (resultProcess != null) {
+            objectIOManager.showMessage(resultProcess);
+        }
+    }
     public void adminMenu() {
+        warningItem();
         boolean exitMenu = false;
         do {
-            int actionInt = objectIOManager.bouttonQuestion("¿Qué opcion desea realizar?", "MENU DE ADMINISTRADOR.",
-                    new String[] { "Revisar evaluaciones de una habitación en especifico",
-                            "Revisar la evaluación general de un tipo de habitación",
-                            "Revisar la evaluación genereal del establecimiento" });
-            switch (actionInt) {
-                case 0:
+            char action = objectIOManager.inputList("¿Qué opcion desea realizar?", "MENU DE ADMINISTRADOR.", new String[] { "1.Revisar evaluaciones de una habitación en especifico", "2.Revisar la evaluación general de un tipo de habitación", "3.Revisar la evaluación genereal del establecimiento","4.Mostrar el ranking gobal de los items.", "5.Cambiar el nombre del administrador.", "6.Cambiar la contraseña.", "7"}).charAt(0);
+                    switch (action) {
+                case '1':
                     objectIOManager.showMessage(showRate());
                     break;
-                case 1:
+                case '2':
                     objectIOManager.showMessage(showRatingTypeRoom());
                     break;
-                case 2:
-                    objectIOManager.showMessage( "La calificación global del establecimiento es de: " + objectDecimalFormat.format(objectHousing.getGlobalRate()) );
+                case '3':
+                    objectIOManager.showMessage( "La calificación global del establecimiento es de: " + objectDecimalFormat.format(objectHousing.searchInGlobalRates("GENERAL")));
                     objectIOManager.showMessage(showGlobalComments());
+                    break;
+                case '4':
+                    objectIOManager.showMessage(objectHousing.showRanking());
+                    break;
+                case '5':
+                    if (adminLog())
+                        objectIOManager.showMessage(changeAdminName());
+                    break;
+                case '6':
+                    if (adminLog())
+                        objectIOManager.showMessage(changeAdminPassword());
+                    break;
+                case '7':
+                        objectIOManager.showMessage(objectHousing.showRanking());;
                     break;
                 default:
                     exitMenu = true;
@@ -234,13 +242,13 @@ public class Presenter {
                     new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." });
             switch (action) {
                 case 'N':
-                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getNormalRate()));
+                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getNormalRates()[0]));
                     return showCommentsTypeRoom(action);
                 case 'V':
-                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getVIPRate()));
+                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getVIPRates()[0]));
                     return showCommentsTypeRoom(action);
                 case 'P':
-                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getPremiumRate()));
+                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getPremiumRates()[0]));
                     return showCommentsTypeRoom(action);
                 default:
                     exitMenu = true;
@@ -288,6 +296,25 @@ public class Presenter {
 
     }
 
+    public boolean adminLog() {
+        String nameUser = objectIOManager.inputData("Ingrese su nombre de usuario.");
+        String passwordUser = objectIOManager.inputData("Ingrese la contraseña.");
+        if (objectHousing.getAdminName().equals(nameUser) && objectHousing.getAdminPassword().equals(passwordUser)) {
+            return true;
+        } else
+            objectIOManager.showMessage("Las credenciales estan mal, lo devolveremos al menu de loggeo.");
+        return false;
+    }
+
+    public String changeAdminName() {
+        String newName = objectIOManager.inputData("Ingresa el nuevo nombre.");
+        return objectHousing.changeAdminName(newName);
+    }
+    public String changeAdminPassword() {
+        String newPassword = objectIOManager.inputData("Ingresa la nueva contraseña.");
+        return objectHousing.changeAdminPassword(newPassword);
+    }
+
     // Metodos utlizados por Admin y el cliente
 
     public char verifyInputList(String message, String titule, String[] options) {
@@ -295,13 +322,9 @@ public class Presenter {
                 "REVISIÓN DE HABITACIONES.",
                 new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." });
         if (optionString.equals("null")) {
-            return 'n';
+            return '0';
         } else
             return optionString.charAt(11);
-    }
-
-    public void verifyInput() {
-
     }
 
     public void init() {

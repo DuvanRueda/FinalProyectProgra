@@ -50,6 +50,11 @@ public class VIPRoom extends Room {
     }
 
     @Override
+    public double[] getRatings(){
+        return new double[] {getGeneralRate(), getCleaningRate(), getComfortRate(), getLocationRate(), getCustomerServiceRate(), getQualityRate(), getServicesRate(), interiorRate};
+    }
+
+    @Override
     public String myToString() {
         return "Estadisticas cabaña " + getRoomName() +
                 "\nLimpieza: " + String.format("%.1f",getCleaningRate()) + 

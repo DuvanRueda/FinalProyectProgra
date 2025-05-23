@@ -124,8 +124,11 @@ public class Room {
         }
     }
 
+    public double[] getRatings() {
+        return new double[] {generalRate, cleaningRate, comfortRate, locationRate, customerServiceRate, qualityRate, servicesRate};
+    }
+
     public String myToString() {
-        System.out.println(generalRate);
         return "Estadisticas cabaña " + roomName +
                 "\nLimpieza: " + String.format("%.1f",cleaningRate) + 
                 "\nComodidad: " + String.format("%.1f",comfortRate) + 
