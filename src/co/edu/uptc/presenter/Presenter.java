@@ -25,14 +25,14 @@ public class Presenter {
         objectHousing = new Housing();
     }
 
-    public void requestNumberRooms(String typeRoom) {
+    public void requestNumberRooms(char typeRoom) {
         boolean isCorrectRooms = false;
         int numberRoomRows = 0;
         do {
             try {
                 numberRoomRows = Integer.parseInt(objectIOManager.inputData("Ingrese la cantidad de habitaciones " + typeRoom + " por columna que tiene su alojamiento.\n(Filas de habitaciones.)"));
                 int numberRoomColumns = Integer.parseInt(objectIOManager.inputData("Ingrese la cantidad de habitaciones " + typeRoom + " por fila que tiene su alojamiento.\n(Columnas de habitaciones.)"));
-                isCorrectRooms = objectHousing.validateRooms(typeRoom, numberRoomRows, numberRoomColumns);
+                isCorrectRooms = objectHousing.initRooms(typeRoom, numberRoomRows, numberRoomColumns);
             } catch (NumberFormatException e) {
                 objectIOManager.showMessage("Ha ingresado un dato inesperado, vuelva a ingresar el numero de las habitaciones " + typeRoom);
             }
@@ -41,15 +41,14 @@ public class Presenter {
     }
 
     public void createRooms() {
-        requestNumberRooms("Normales");
-        requestNumberRooms("VIP");
-        requestNumberRooms("Premium");
+        requestNumberRooms('N');
+        requestNumberRooms('V');
+        requestNumberRooms('P');
     }
 
     public void menuLog() {
         boolean exit = false;
         do {
-            // try {
             int resultOption = objectIOManager.bouttonQuestion("Seleccione el tipo de usuario", "MENU DE LOGGEO",
                     new String[] { "Cliente", "Administrador" });
             switch (resultOption) {
@@ -66,9 +65,6 @@ public class Presenter {
                     exit = exit();
                     break;
             }
-            // } catch (Exception e) {
-            // System.out.println("Que machetaso tan gonorrea");
-            // }
         } while (!exit);
     }
 
@@ -202,7 +198,7 @@ public class Presenter {
                     objectIOManager.showMessage(showRatingTypeRoom());
                     break;
                 case '3':
-                    objectIOManager.showMessage(objectHousing.showRates(action));
+                    objectIOManager.showMessage(objectHousing.showGeneralRates(action));
                     objectIOManager.showMessage(showGlobalComments());
                     break;
                 case '4':
@@ -228,13 +224,13 @@ public class Presenter {
                     new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." });
             switch (action) {
                 case 'N':
-                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: \n" + objectHousing.showRates(action));
+                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: \n" + objectHousing.showGeneralRates(action));
                     return showCommentsTypeRoom(action);
                 case 'V':
-                    objectIOManager.showMessage("Las habitaciones VIP tienen una puntuacion general de:\n " + objectHousing.showRates(action));
+                    objectIOManager.showMessage("Las habitaciones VIP tienen una puntuacion general de:\n " + objectHousing.showGeneralRates(action));
                     return showCommentsTypeRoom(action);
                 case 'P':
-                    objectIOManager.showMessage("Las habitaciones premium tienen una puntuacion general de:\n " + objectHousing.showRates(action));
+                    objectIOManager.showMessage("Las habitaciones premium tienen una puntuacion general de:\n " + objectHousing.showGeneralRates(action));
                     return showCommentsTypeRoom(action);
                 default:
                     exitMenu = true;

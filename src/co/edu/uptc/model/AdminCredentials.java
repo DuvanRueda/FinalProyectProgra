@@ -26,6 +26,7 @@ public class AdminCredentials {
         try {
             if (!newName.matches(ADMIN_REGEX))
                 throw new InvalidInputAdminException(newName);
+            name = newName;
             return "Se ha cambiado la contraseña correctamente";
         } catch (InvalidInputAdminException e) {
             return e.getMessage();
@@ -36,6 +37,7 @@ public class AdminCredentials {
         try {
             if (!newPassword.matches(ADMIN_REGEX))
                 throw new InvalidInputAdminException(newPassword);
+            password = newPassword;
             return "Se ha cambiado la contraseña correctamente";
         } catch (InvalidInputAdminException e) {
             return e.getMessage();

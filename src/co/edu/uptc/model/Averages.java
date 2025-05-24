@@ -43,25 +43,7 @@ public class Averages {
         return average;
     }
 
-    public double[] roomAverage(Room[][] rooms) {
-        int count = 0;
-        double[] generalRates = new double[rooms[0][0].getRatings().length];
-        for (int i = 0; i < rooms.length; i++) {
-            for (int j = 0; j < rooms[0].length; j++) {
-                if (rooms[i][j].getGeneralRate() != 0) {
-                    double[] rates = rooms[i][j].getRatings();
-                    generalRates = plusRates(generalRates, rates);
-                    count++;
-                }
-            }
-        }
-        for (int i = 0; i < generalRates.length; i++) {
-            generalRates[i] = generalRates[i] / count;
-        }
-        return generalRates;
-    }
-
-    public HashMap<String, Double> roomAverage2(String[] sentences, Room[][] rooms) {
+    public HashMap<String, Double> roomAverage(String[] sentences, Room[][] rooms) {
         int count = 0;
         HashMap<String,Double> generalRates = new HashMap<>();
         for (int i = 0; i < rooms.length; i++) {

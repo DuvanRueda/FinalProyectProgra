@@ -32,41 +32,25 @@ public class Housing {
         resultProcess = "";
     }
 
-    public boolean validateRooms(String typeRoom, int rows, int columns) {
-        if (rows > 0 && columns > 0) {
-            initRooms(typeRoom, rows, columns);
+
+    public boolean initRooms(char typeRoom, int rows, int columns) {
+        if (validateRooms(rows, columns)) {
+            switch (typeRoom) {
+            case 'N'-> createNormalRooms(rows, columns);
+            case 'V'-> createVIPRooms(rows, columns);
+            case 'P'-> createPremiumRooms(rows, columns);
+            }
             return true;
-        }
+        }  
         return false;
     }
 
-    public void initRooms(String typeRoom, int rows, int columns) {
-        if (typeRoom.equals("Normales")) {
-            initNormalRooms(rows, columns);
-        } else if (typeRoom.equals("VIP")) {
-            initVipRooms(rows, columns);
-        } else {
-            initPremiumRooms(rows, columns);
-
-        }
+    public boolean validateRooms(int rows, int columns) {
+        return rows > 0 && columns > 0;
     }
 
-    public void initNormalRooms(int rows, int columns) {
+    public void createNormalRooms(int rows, int columns) {
         normalRooms = new Room[rows][columns];
-        createRooms();
-    }
-
-    public void initVipRooms(int rows, int columns) {
-        VIPRooms = new VIPRoom[rows][rows];
-        createVIPRooms();
-    }
-
-    public void initPremiumRooms(int rows, int columns) {
-        premiumRooms = new PremiumRoom[rows][columns];
-        createPremiumRooms();
-    }
-
-    public void createRooms() {
         int countCreateRoom = 1;
         for (int i = 0; i < normalRooms.length; i++) {
             for (int j = 0; j < normalRooms[0].length; j++) {
@@ -76,7 +60,8 @@ public class Housing {
         }
     }
 
-    public void createVIPRooms() {
+    public void createVIPRooms(int rows, int columns) {
+        VIPRooms = new VIPRoom[rows][rows];
         int countCreateRoom = 1;
         for (int i = 0; i < VIPRooms.length; i++) {
             for (int j = 0; j < VIPRooms[0].length; j++) {
@@ -86,7 +71,8 @@ public class Housing {
         }
     }
 
-    public void createPremiumRooms() {
+    public void createPremiumRooms(int rows, int columns) {
+        premiumRooms = new PremiumRoom[rows][columns];
         int countCreateRoom = 1;
         for (int i = 0; i < premiumRooms.length; i++) {
             for (int j = 0; j < premiumRooms[0].length; j++) {
@@ -95,102 +81,8 @@ public class Housing {
             }
         }
     }
-    
-    public void roomAverage(Room[][] rooms) {
-        HashMap<String, Double> average = objectAverages.roomAverage2(CATEGORIES, rooms);
-        int sizeRates = average.size();
-        if (sizeRates == 7) {
-                normalRates.setAllRates(average);
-        } else if (sizeRates == 8) {
-                VIPRates.setAllRates(average);
-        } else {
-            premiumRates.setAllRates(average);
-        }
-    }
-    
-    public void globalAverage() {
-        for (int i = 0; i < CATEGORIES.length-1; i++) {
-            double[] rates;
-            if (i == 7) {
-                rates = new double[] {0, VIPRates.getRate(CATEGORIES[i]), premiumRates.getRate(CATEGORIES[i])};
-            } else {
-                rates = new double[] { normalRates.getRate(CATEGORIES[i]), VIPRates.getRate(CATEGORIES[i]), premiumRates.getRate(CATEGORIES[i])};
-            }
-            globalRates.setRate(CATEGORIES[i], objectAverages.globalAverage(rates));
-        }
-        globalRates.setRate("JACUZZI", premiumRates.getRate(CATEGORIES[8]));
-    }
 
-    public String makeRatingRoom(double[] ratings, String nameRoom, String comment) {
-        if (nameRoom.charAt(0) == 'N') {
-            return makeRatingRoom(ratings, nameRoom, comment, normalRooms);
-        } else if (nameRoom.charAt(0) == 'V') {
-            return makeRatingRoom(ratings, nameRoom, comment, VIPRooms);
-        } else
-            return makeRatingRoom(ratings, nameRoom, comment, premiumRooms);
-    }
-
-    public String makeRatingRoom(double[] ratings, String nameRoom, String comment, Room[][] rooms) {
-        for (int i = 0; i < rooms.length; i++) {
-            for (int j = 0; j < rooms[0].length; j++) {
-                if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
-                    if (comment != null)
-                        rooms[i][j].addComment(comment);
-                    resultProcess = rooms[i][j].makeRating(ratings);
-                    roomAverage(rooms);
-                    globalAverage();
-                    return resultProcess;
-                }
-            }
-        }
-        return "";
-    }
-
-    public String showGlobalComments() {
-        String commentsNormal = "Comentarios habitaciones normales: \n" + showCommentsTypeRoom(normalRooms);
-        String commentsVIP = "Comentarios habitaciones VIP: \n" +  showCommentsTypeRoom(VIPRooms);
-        String commentsPremiun = "Comentarios habitaciones premium: \n" +  showCommentsTypeRoom(premiumRooms);
-        return commentsNormal + commentsVIP + commentsPremiun;
-    }
-
-    public String showCommentsTypeRoom(char typeRoom) {
-        if (typeRoom == 'N') {
-            return showCommentsTypeRoom(normalRooms);
-        } else if (typeRoom == 'V') {
-            return showCommentsTypeRoom(VIPRooms);
-        } else
-            return showCommentsTypeRoom(premiumRooms);
-    }
-
-    public String showCommentsTypeRoom(Room[][] rooms) {
-        resultProcess = "";
-        for (int i = 0; i < rooms.length; i++) {
-            for (int j = 0; j < rooms[0].length; j++) {
-                resultProcess += rooms[i][j].getCommentsRoom().showComments();
-            }
-        }
-        return resultProcess;
-    }
-
-    public String showCommentsRoom(String nameRoom) {
-        if (nameRoom.charAt(0) == 'N') {
-            return showCommentsRoom(normalRooms, nameRoom);
-        } else if (nameRoom.charAt(0) == 'V') {
-            return showCommentsRoom(VIPRooms, nameRoom);
-        } else
-            return showCommentsRoom(premiumRooms, nameRoom);
-    }
-
-    public String showCommentsRoom(Room[][] rooms, String nameRoom) {
-        for (int i = 0; i < rooms.length; i++) {
-            for (int j = 0; j < rooms[0].length; j++) {
-                if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
-                    return rooms[i][j].getCommentsRoom().showComments();
-                }
-            }
-        }
-        return "No se encontro la habitacion que buscas";
-    }
+    // APARTADO DEL CLIENTE
 
     public boolean verifyAvailabilityRoom(char typeRoom) {
         if (typeRoom == 'N') {
@@ -262,6 +154,107 @@ public class Housing {
         return false;
     }
 
+    public String makeRatingRoom(double[] ratings, String nameRoom, String comment) {
+        if (nameRoom.charAt(0) == 'N') {
+            return makeRatingRoom(ratings, nameRoom, comment, normalRooms);
+        } else if (nameRoom.charAt(0) == 'V') {
+            return makeRatingRoom(ratings, nameRoom, comment, VIPRooms);
+        } else
+            return makeRatingRoom(ratings, nameRoom, comment, premiumRooms);
+    }
+
+    public String makeRatingRoom(double[] ratings, String nameRoom, String comment, Room[][] rooms) {
+        for (int i = 0; i < rooms.length; i++) {
+            for (int j = 0; j < rooms[0].length; j++) {
+                if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
+                    if (comment != null)
+                        rooms[i][j].addComment(comment);
+                    resultProcess = rooms[i][j].makeRating(ratings);
+                    roomAverage(rooms);
+                    globalAverage();
+                    return resultProcess;
+                }
+            }
+        }
+        return "";
+    }
+
+
+    //METODOS USADOS INDIRECTAMENTE POR EL USUARIO 
+
+    private void roomAverage(Room[][] rooms) {
+        HashMap<String, Double> average = objectAverages.roomAverage(CATEGORIES, rooms);
+        int sizeRates = average.size();
+        if (sizeRates == 7) {
+                normalRates.setAllRates(average);
+        } else if (sizeRates == 8) {
+                VIPRates.setAllRates(average);
+        } else {
+            premiumRates.setAllRates(average);
+        }
+    }
+    
+    public void globalAverage() {
+        for (int i = 0; i < CATEGORIES.length-1; i++) {
+            double[] rates;
+            if (i == 7) {
+                rates = new double[] {0, VIPRates.getRate(CATEGORIES[i]), premiumRates.getRate(CATEGORIES[i])};
+            } else {
+                rates = new double[] { normalRates.getRate(CATEGORIES[i]), VIPRates.getRate(CATEGORIES[i]), premiumRates.getRate(CATEGORIES[i])};
+            }
+            globalRates.setRate(CATEGORIES[i], objectAverages.globalAverage(rates));
+        }
+        globalRates.setRate("JACUZZI", premiumRates.getRate(CATEGORIES[8]));
+    }
+
+    // APARTADO DEL ADMINISTRADOR
+
+    public String showGlobalComments() {
+        String commentsNormal = "Comentarios habitaciones normales: \n" + showCommentsTypeRoom(normalRooms);
+        String commentsVIP = "Comentarios habitaciones VIP: \n" +  showCommentsTypeRoom(VIPRooms);
+        String commentsPremiun = "Comentarios habitaciones premium: \n" +  showCommentsTypeRoom(premiumRooms);
+        return commentsNormal + commentsVIP + commentsPremiun;
+    }
+
+    public String showCommentsTypeRoom(char typeRoom) {
+        if (typeRoom == 'N') {
+            return showCommentsTypeRoom(normalRooms);
+        } else if (typeRoom == 'V') {
+            return showCommentsTypeRoom(VIPRooms);
+        } else
+            return showCommentsTypeRoom(premiumRooms);
+    }
+
+    public String showCommentsTypeRoom(Room[][] rooms) {
+        resultProcess = "";
+        for (int i = 0; i < rooms.length; i++) {
+            for (int j = 0; j < rooms[0].length; j++) {
+                resultProcess += rooms[i][j].getCommentsRoom().showComments();
+            }
+        }
+        return resultProcess;
+    }
+
+    public String showCommentsRoom(String nameRoom) {
+        if (nameRoom.charAt(0) == 'N') {
+            return showCommentsRoom(normalRooms, nameRoom);
+        } else if (nameRoom.charAt(0) == 'V') {
+            return showCommentsRoom(VIPRooms, nameRoom);
+        } else
+            return showCommentsRoom(premiumRooms, nameRoom);
+    }
+
+    public String showCommentsRoom(Room[][] rooms, String nameRoom) {
+        for (int i = 0; i < rooms.length; i++) {
+            for (int j = 0; j < rooms[0].length; j++) {
+                if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
+                    return rooms[i][j].getCommentsRoom().showComments();
+                }
+            }
+        }
+        return "No se encontro la habitacion que buscas";
+    }
+
     public String showRateRoom(String nameRoom) {
         if (nameRoom.charAt(0) == 'N') {
             return showRateRoom(normalRooms, nameRoom);
@@ -282,14 +275,6 @@ public class Housing {
         return "No se ha encontrado la cabaña digitada.";
     }
 
-    public String changeAdminName(String newName) {
-        return objectAdminCredentials.changeAdminName(newName);
-    }
-
-    public String changeAdminPassword(String newPassword) {
-        return objectAdminCredentials.changeAdminPassword(newPassword);
-    }
-
     public String automaticWarning() {
         resultProcess = "";
         for (Map.Entry<String, Double> input : globalRates.getAllRates().entrySet()) {
@@ -304,7 +289,7 @@ public class Housing {
         return resultProcess;
     }
 
-    public String showRates(char typeRates) {
+    public String showGeneralRates(char typeRates) {
         if (typeRates == 'N') {
             return  normalRates.showRates();
         } else if (typeRates == 'V') {
@@ -322,6 +307,14 @@ public class Housing {
             return VIPRooms[0][0].getSENTENCES();
         } else
             return premiumRooms[0][0].getSENTENCES();
+    }
+
+    public String changeAdminName(String newName) {
+        return objectAdminCredentials.changeAdminName(newName);
+    }
+
+    public String changeAdminPassword(String newPassword) {
+        return objectAdminCredentials.changeAdminPassword(newPassword);
     }
 
     public boolean isCredentialsValid(String name, String password) {
