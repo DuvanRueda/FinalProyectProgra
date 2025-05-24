@@ -285,7 +285,7 @@ public class Presenter {
     public boolean adminLog() {
         String nameUser = objectIOManager.inputData("Ingrese su nombre de usuario.");
         String passwordUser = objectIOManager.inputData("Ingrese la contraseña.");
-        if (objectHousing.getAdminName().equals(nameUser) && objectHousing.getAdminPassword().equals(passwordUser)) {
+        if (objectHousing.isCredentialsValid(nameUser, passwordUser)) {
             return true;
         } else
             objectIOManager.showMessage("Las credenciales estan mal, lo devolveremos al menu de loggeo.");
