@@ -1,7 +1,5 @@
 package co.edu.uptc.presenter;
 
-import java.text.DecimalFormat;
-
 import co.edu.uptc.model.Housing;
 import co.edu.uptc.view.IOManager;
 
@@ -17,7 +15,6 @@ public class Presenter {
     private String resultProcess;
     private IOManager objectIOManager;
     private Housing objectHousing;
-    private DecimalFormat objectDecimalFormat;
 
 
     public Presenter() {
@@ -26,7 +23,6 @@ public class Presenter {
         resultProcess = "";
         objectIOManager = new IOManager();
         objectHousing = new Housing();
-        objectDecimalFormat = new DecimalFormat("#.#");
     }
 
     public void requestNumberRooms(String typeRoom) {
@@ -120,13 +116,13 @@ public class Presenter {
     }
 
     public String bookking(char typeRoom) {
-        if (!objectHousing.verifyAvailability(typeRoom))
+        if (!objectHousing.verifyAvailabilityRoom(typeRoom))
             return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
-        password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.\nLa contraseña debe ca¿ontar con minimo 3 letras y 2 numeros.");
+        password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.\nLa contraseña debe contar con mínimo 3 letras y 2 números.");
         if (!objectHousing.getNormalRooms()[0][0].verifyPassword(password)) {
             return "La contraseña no cumple con los requisitos pedidos";
         }
-        return objectHousing.bookking(typeRoom, password);
+        return objectHousing.bookkingRoom(typeRoom, password);
     }
 
     public String returnRoomMenu() {
@@ -154,13 +150,13 @@ public class Presenter {
     public String returnRoom(String nameRoom, String password) {
         if (objectHousing.returnRoom(nameRoom, password)) {
             objectIOManager.showMessage("Credenciales correctas, procederemos a hacerle la evaluacion de satisfaccion.");
-            return rating(nameRoom);
+            return makeRatingRoom(nameRoom);
         } else
             return "El nombre de la habitacion o la contraseña son erroneas, vuelva a intentarlo.";
     }
 
-    public String rating(String nameRoom) {
-        String[] sentences = getSentences(nameRoom);
+    public String makeRatingRoom(String nameRoom) {
+        String[] sentences = objectHousing.getSentences(nameRoom.charAt(0));
         double[] ratings = new double[sentences.length];
         for (int i = 0; i < ratings.length; i++) {
             double rate = Double.parseDouble(objectIOManager.inputData(sentences[i]));
@@ -171,15 +167,11 @@ public class Presenter {
                 i--;
             }
         }
-        resultProcess = addComment();
-        return objectHousing.rating(ratings, nameRoom, resultProcess);
+        resultProcess = addCommentRoom();
+        return objectHousing.makeRatingRoom(ratings, nameRoom, resultProcess);
     }
 
-    public String[] getSentences(String nameRoom) {
-        return objectHousing.getSentences(nameRoom.charAt(0));
-    }
-
-    public String addComment() {
+    public String addCommentRoom() {
         int actionInt = objectIOManager.bouttonQuestion("¿Desea dejar un comentario de su experiencia en el hospedaje?",
                 null, new String[] { "SI", "NO" });
         if (actionInt == 0) {
@@ -201,7 +193,7 @@ public class Presenter {
         warningItem();
         boolean exitMenu = false;
         do {
-            char action = objectIOManager.inputList("¿Qué opcion desea realizar?", "MENU DE ADMINISTRADOR.", new String[] { "1.Revisar evaluaciones de una habitación en especifico", "2.Revisar la evaluación general de un tipo de habitación", "3.Revisar la evaluación genereal del establecimiento","4.Mostrar el ranking gobal de los items.", "5.Cambiar el nombre del administrador.", "6.Cambiar la contraseña.", "7"}).charAt(0);
+            char action = objectIOManager.inputList("¿Qué opcion desea realizar?", "MENU DE ADMINISTRADOR.", new String[] { "1.Revisar evaluaciones de una habitación en especifico", "2.Revisar la evaluación general de un tipo de habitación", "3 .Mostrar el ranking gobal de los items.", "4.Cambiar el nombre del administrador.", "5.Cambiar la contraseña."}).charAt(0);
                     switch (action) {
                 case '1':
                     objectIOManager.showMessage(showRate());
@@ -210,22 +202,16 @@ public class Presenter {
                     objectIOManager.showMessage(showRatingTypeRoom());
                     break;
                 case '3':
-                    objectIOManager.showMessage( "La calificación global del establecimiento es de: " + objectDecimalFormat.format(objectHousing.searchInGlobalRates("GENERAL")));
+                    objectIOManager.showMessage(objectHousing.showRates(action));
                     objectIOManager.showMessage(showGlobalComments());
                     break;
                 case '4':
-                    objectIOManager.showMessage(objectHousing.showRanking());
-                    break;
-                case '5':
                     if (adminLog())
                         objectIOManager.showMessage(changeAdminName());
                     break;
-                case '6':
+                case '5':
                     if (adminLog())
                         objectIOManager.showMessage(changeAdminPassword());
-                    break;
-                case '7':
-                        objectIOManager.showMessage(objectHousing.showRanking());;
                     break;
                 default:
                     exitMenu = true;
@@ -242,13 +228,13 @@ public class Presenter {
                     new String[] { "Habitación Normal.", "Habitación VIP.", "Habitación Premium." });
             switch (action) {
                 case 'N':
-                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getNormalRates()[0]));
+                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: \n" + objectHousing.showRates(action));
                     return showCommentsTypeRoom(action);
                 case 'V':
-                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getVIPRates()[0]));
+                    objectIOManager.showMessage("Las habitaciones VIP tienen una puntuacion general de:\n " + objectHousing.showRates(action));
                     return showCommentsTypeRoom(action);
                 case 'P':
-                    objectIOManager.showMessage("Las habitaciones normales tienen una puntuacion general de: " + objectDecimalFormat.format(objectHousing.getPremiumRates()[0]));
+                    objectIOManager.showMessage("Las habitaciones premium tienen una puntuacion general de:\n " + objectHousing.showRates(action));
                     return showCommentsTypeRoom(action);
                 default:
                     exitMenu = true;
@@ -279,7 +265,7 @@ public class Presenter {
 
     public String showRate() {
         String nameRoom = objectIOManager.inputData("Ingrese el nombre de la habitacion que desea revisar").toUpperCase();
-        String resultProcess = objectHousing.showRate(nameRoom);
+        String resultProcess = objectHousing.showRateRoom(nameRoom);
         if (resultProcess.charAt(0) == 'N')
             return resultProcess;
         objectIOManager.showMessage(resultProcess);

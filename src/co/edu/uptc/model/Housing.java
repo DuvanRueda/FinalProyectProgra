@@ -1,15 +1,10 @@
 package co.edu.uptc.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import co.edu.uptc.exceptionOwn.InvalidInputAdminException;
+import co.edu.uptc.exceptionOwn.*;
 
 /*
  * Author: Duvan Steven Rueda Prieto
@@ -18,30 +13,30 @@ import co.edu.uptc.exceptionOwn.InvalidInputAdminException;
  */
 public class Housing {
 
-    private final double[] VALUE_RATES = new double[] {0.2,0.35,0.45};
-    private final double VALUE_NORMAL_RATE = 0.2;
-    private final double VALUE_VIP_RATE = 0.35;
-    private final double VALUE_PREMIUM_RATE = 0.45;
+    private final String[] CATEGORIES = { "GENERAL", "LIMPIEZA", "COMODIDAD", "UBICACION DE LA HABITACIÓN", "ATENCION DEL PERSONAL", "RELACIÓN CALIDAD/PRESIO", "FUNCIONALIDAD DE LOS SERVICIOS DE LA HABITACIÓN", "INTERIOR", "JACUZZI"};
     private final String ADMIN_REGEX = "^[A-Za-z0-9]{1,10}$";
     private Room normalRooms[][];
     private VIPRoom VIPRooms[][];
     private PremiumRoom premiumRooms[][];
     private HashMap<String, Double> globalRates;
-    private double[] normalRates;
-    private double[] VIPRates;
-    private double[] premiumRates;
-    private String resultString;
+    private HashMap<String, Double> normalRates;
+    private HashMap<String, Double> VIPRates;
+    private HashMap<String, Double> premiumRates;
+    private String resultProcess;
     private String adminName;
     private String adminPassword;
+    private Averages objectAverages;
 
     public Housing() {
         adminName = "Admin";
         adminPassword = "soyElAdmin231";
         globalRates = new HashMap<>();
-        normalRates = new double[7];
-        VIPRates = new double[8];
-        premiumRates = new double[9];
-        resultString = "";
+        normalRates = new HashMap<>();
+        VIPRates = new HashMap<>();
+        premiumRates = new HashMap<>();
+        resultProcess = "";
+        objectAverages = new Averages();
+        initHousing();
     }
 
     public boolean validateRooms(String typeRoom, int rows, int columns) {
@@ -107,114 +102,51 @@ public class Housing {
             }
         }
     }
-
-    public String[] getSentences(char typeRoom) {
-        if (typeRoom == 'N') {
-            return normalRooms[0][0].getSENTENCES();
-        } else if (typeRoom == 'V') {
-            return VIPRooms[0][0].getSENTENCES();
-        } else
-            return premiumRooms[0][0].getSENTENCES();
-    }
-
-    public void roomRating(Room[][] rooms) {
-        int count = 0;
-        int sizeVector = 0;
-        double[] generalRates = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        for (int i = 0; i < rooms.length; i++) {
-            for (int j = 0; j < rooms[0].length; j++) {
-                if (rooms[i][j].getGeneralRate() != 0) {
-                    double[] rates = rooms[i][j].getRatings();
-                    sizeVector = rates.length;
-                    generalRates = plusRates(generalRates, rates);
-                    count++;
-                }
-            }
-        }
-        for (int i = 0; i < sizeVector; i++) {
-            generalRates[i] = generalRates[i] / count;
-        }
-        sentRates(sizeVector, generalRates);
-    }
-
-    public void sentRates(int sizeRates, double[] rates) {
+    
+    public void roomAverage(Room[][] rooms) {
+        HashMap<String, Double> average = objectAverages.roomAverage2(CATEGORIES, rooms);
+        int sizeRates = average.size();
         if (sizeRates == 7) {
-            for (int i = 0; i < sizeRates; i++) {
-                normalRates[i] = rates[i];
-            }
+                normalRates = average;
         } else if (sizeRates == 8) {
-            for (int i = 0; i < sizeRates; i++) {
-                VIPRates[i] = rates[i];
-            }
+                VIPRates = average;
         } else {
-            premiumRates = rates;
+            premiumRates = average;
         }
     }
-
-    public double[] plusRates(double[] generalRates, double[] rates) {
-        double[] localRates = new double[rates.length];
-        for (int i = 0; i < rates.length; i++) {
-            localRates[i] = generalRates[i] + rates[i];
-        }
-        return localRates;
-    }
-
-    public void globalRates() {
-        globalRates.put("GENERAL", average(new double[] {normalRates[0], VIPRates[0], premiumRates[0] }));
-        globalRates.put("LIMPIEZA", average(new double[] {normalRates[1],VIPRates[1], premiumRates[1]}));
-        globalRates.put("COMODIDAD", average(new double[] {normalRates[2], VIPRates[2],premiumRates[2]}));
-        globalRates.put("UBICACION DE LA HABITACIÓN", average(new double[] {normalRates[3], VIPRates[3], premiumRates[3]}));
-        globalRates.put("ATENCION DEL PERSONAL", average(new double[] {normalRates[4], VIPRates[4], premiumRates[4]}));
-        globalRates.put("RELACIÓN CALIDAD/PRESIO", average(new double[]{normalRates[5], VIPRates[5], premiumRates[5]}));
-        globalRates.put("FUNCIONALIDAD DE LOS SERVICIOS DE LA HABITACIÓN", average(new double[]{normalRates[6], VIPRates[6], premiumRates[6]}));
-        globalRates.put("INTERIOR", average(new double[]{0, VIPRates[7], premiumRates[7]}));
-        globalRates.put("JACUZZI", premiumRates[8]);
-    }
-
-    public double average(double[] rates) {
-        double rateSum = 0;
-        double average = 0;
-        List<Integer> invalidIndex = new ArrayList<>();
-        for (int i = 0; i < rates.length; i++) {
-            if (rates[i] == 0) {
-                invalidIndex.add(i);
+    
+    public void globalAverage() {
+        for (int i = 0; i < CATEGORIES.length-1; i++) {
+            double[] rates;
+            if (i == 7) {
+                rates = new double[] {0, VIPRates.get(CATEGORIES[i]), premiumRates.get(CATEGORIES[i])};
+            } else {
+                rates = new double[] { normalRates.get(CATEGORIES[i]), VIPRates.get(CATEGORIES[i]), premiumRates.get(CATEGORIES[i])};
             }
+            globalRates.put(CATEGORIES[i], objectAverages.globalAverage(rates));
         }
-        for (int i = 0; i < 3; i++) {
-            if (invalidIndex.size() == 0) {
-                average += VALUE_RATES[i] * rates[i];
-
-            } else if (invalidIndex.size() == 1) {
-                rateSum = (VALUE_RATES[invalidIndex.get(0)]) / 2;
-                average += (VALUE_RATES[i] + rateSum) * rates[i];
-            } else if (invalidIndex.size() == 2) {
-                average += rates[i];
-            } else 
-                average = 0;
-        }
-
-        return average;
+        globalRates.put("JACUZZI", premiumRates.get(CATEGORIES[8]));
     }
 
-    public String rating(double[] ratings, String nameRoom, String comment) {
+    public String makeRatingRoom(double[] ratings, String nameRoom, String comment) {
         if (nameRoom.charAt(0) == 'N') {
-            return rating(ratings, nameRoom, comment, normalRooms);
+            return makeRatingRoom(ratings, nameRoom, comment, normalRooms);
         } else if (nameRoom.charAt(0) == 'V') {
-            return rating(ratings, nameRoom, comment, VIPRooms);
+            return makeRatingRoom(ratings, nameRoom, comment, VIPRooms);
         } else
-            return rating(ratings, nameRoom, comment, premiumRooms);
+            return makeRatingRoom(ratings, nameRoom, comment, premiumRooms);
     }
 
-    public String rating(double[] ratings, String nameRoom, String comment, Room[][] rooms) {
+    public String makeRatingRoom(double[] ratings, String nameRoom, String comment, Room[][] rooms) {
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
                 if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
                     if (comment != null)
                         rooms[i][j].addComment(comment);
-                    resultString = rooms[i][j].makeRating(ratings);
-                    roomRating(rooms);
-                    globalRates();
-                    return resultString;
+                    resultProcess = rooms[i][j].makeRating(ratings);
+                    roomAverage(rooms);
+                    globalAverage();
+                    return resultProcess;
                 }
             }
         }
@@ -222,9 +154,9 @@ public class Housing {
     }
 
     public String showGlobalComments() {
-        String commentsNormal = showCommentsTypeRoom(normalRooms);
-        String commentsVIP = showCommentsTypeRoom(VIPRooms);
-        String commentsPremiun = showCommentsTypeRoom(premiumRooms);
+        String commentsNormal = "Comentarios habitaciones normales: \n" + showCommentsTypeRoom(normalRooms);
+        String commentsVIP = "Comentarios habitaciones VIP: \n" +  showCommentsTypeRoom(VIPRooms);
+        String commentsPremiun = "Comentarios habitaciones premium: \n" +  showCommentsTypeRoom(premiumRooms);
         return commentsNormal + commentsVIP + commentsPremiun;
     }
 
@@ -238,13 +170,13 @@ public class Housing {
     }
 
     public String showCommentsTypeRoom(Room[][] rooms) {
-        resultString = "";
+        resultProcess = "";
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
-                resultString += rooms[i][j].getCommentsRoom().showComments();
+                resultProcess += rooms[i][j].getCommentsRoom().showComments();
             }
         }
-        return resultString;
+        return resultProcess;
     }
 
     public String showCommentsRoom(String nameRoom) {
@@ -267,16 +199,16 @@ public class Housing {
         return "No se encontro la habitacion que buscas";
     }
 
-    public boolean verifyAvailability(char typeRoom) {
+    public boolean verifyAvailabilityRoom(char typeRoom) {
         if (typeRoom == 'N') {
-            return verifyAvailability(normalRooms);
+            return verifyAvailabilityRoom(normalRooms);
         } else if (typeRoom == 'V') {
-            return verifyAvailability(VIPRooms);
+            return verifyAvailabilityRoom(VIPRooms);
         } else
-            return verifyAvailability(premiumRooms);
+            return verifyAvailabilityRoom(premiumRooms);
     }
 
-    public boolean verifyAvailability(Room[][] rooms) {
+    public boolean verifyAvailabilityRoom(Room[][] rooms) {
         for (int i = rooms.length - 1; i > -1; i--) {
             for (int j = rooms[0].length - 1; j > -1; j--) {
                 if (rooms[i][j].isFree()) {
@@ -287,7 +219,7 @@ public class Housing {
         return false;
     }
 
-    public String bookking(char typeRoom, String password) {
+    public String bookkingRoom(char typeRoom, String password) {
         if (typeRoom == 'N') {
             return bookkingRoom(password, normalRooms);
         } else if (typeRoom == 'V') {
@@ -335,16 +267,16 @@ public class Housing {
         return false;
     }
 
-    public String showRate(String nameRoom) {
+    public String showRateRoom(String nameRoom) {
         if (nameRoom.charAt(0) == 'N') {
-            return showRate(normalRooms, nameRoom);
+            return showRateRoom(normalRooms, nameRoom);
         } else if (nameRoom.charAt(0) == 'V') {
-            return showRate(VIPRooms, nameRoom);
+            return showRateRoom(VIPRooms, nameRoom);
         } else
-            return showRate(premiumRooms, nameRoom);
+            return showRateRoom(premiumRooms, nameRoom);
     }
 
-    public String showRate(Room[][] rooms, String nameRoom) {
+    public String showRateRoom(Room[][] rooms, String nameRoom) {
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
                 if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
@@ -376,33 +308,44 @@ public class Housing {
     }
 
     public String automaticWarning() {
-        resultString = "";
+        resultProcess = "";
         for (Map.Entry<String, Double> input : globalRates.entrySet()) {
             if (input.getValue() > 0 && input.getValue() < 3.0) {
-                resultString += "Alerta: El ítem " + input.getKey() + " tiene un evalución crítica: "
+                resultProcess += "Alerta: El ítem " + input.getKey() + " tiene un evalución crítica: "
                         + String.format("%.1f", input.getValue()) + "\n";
             }
         }
-        if (resultString.equals("")) {
+        if (resultProcess.equals("")) {
             return null;
         }
-        return resultString;
+        return resultProcess;
     }
 
-    public String showRanking() {
-        resultString = "";
-        for (Map.Entry<String, Double> input : makeRanking().entrySet()) {
+    public String showRates(char typeRates) {
+        if (typeRates == 'N') {
+            return  showRates(makeRanking(normalRates));
+        } else if (typeRates == 'V') {
+            return showRates(makeRanking(VIPRates));
+        } else if (typeRates == 'P') {
+            return showRates(makeRanking(premiumRates));
+        } else 
+            return showRates(makeRanking(globalRates));
+    }
+
+    public String showRates(Map<String, Double> rates) {
+        resultProcess = "";
+        for (Map.Entry<String, Double> input : rates.entrySet()) {
             String key = input.getKey();
             double value = input.getValue();
-            resultString += key + " = " + String.format("%.1f", value) + "\n";
+            resultProcess += key + " = " + String.format("%.1f", value) + "\n";
         }
-        return resultString;
+        return resultProcess;
     }
 
-    public LinkedHashMap<String, Double> makeRanking() {
+    public LinkedHashMap<String, Double> makeRanking(Map<String, Double> rates) {
         Map.Entry<String, Double> generalEntry = null;
         ArrayList<Map.Entry<String, Double>> localList = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : globalRates.entrySet()) {
+        for (Map.Entry<String, Double> entry : rates.entrySet()) {
             if (entry.getKey().equals("GENERAL")) {
                 generalEntry = entry;
             } else
@@ -411,27 +354,48 @@ public class Housing {
         return sortRanking(generalEntry, localList);
     }
 
-    public LinkedHashMap<String, Double> sortRanking(Map.Entry<String, Double> generalEntry,
-            ArrayList<Map.Entry<String, Double>> ranking) {
-        Collections.sort(ranking, new Comparator<Map.Entry<String, Double>>() {
-            @Override
-            public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        });
+    public LinkedHashMap<String, Double> sortRanking(Map.Entry<String, Double> generalEntry, ArrayList<Map.Entry<String, Double>> ranking) {
+        for (int i = 0; i < ranking.size() - 1; i++) {
+            for (int j = 0; j < ranking.size() - i - 1; j++) {
+                Map.Entry<String, Double> current = ranking.get(j);
+                Map.Entry<String, Double> next = ranking.get(j + 1);
 
+                if (current.getValue() < next.getValue()) {
+                    ranking.remove(j + 1);
+                    ranking.remove(j);
+                    ranking.add(j, next);
+                    ranking.add(j + 1, current);
+                }
+            }
+        }
         LinkedHashMap<String, Double> localRanking = new LinkedHashMap<>();
         for (Map.Entry<String, Double> entry : ranking) {
             localRanking.put(entry.getKey(), entry.getValue());
         }
-        if (generalEntry != null) {
-            localRanking.put(generalEntry.getKey(), generalEntry.getValue());
-        }
+        localRanking.put(generalEntry.getKey(), generalEntry.getValue());
         return localRanking;
     }
 
-    public double searchInGlobalRates(String key) {
-        return globalRates.get(key);
+    private void initHousing() {
+        for (int i = 0; i < CATEGORIES.length; i++) {
+            globalRates.put(CATEGORIES[i], 0.0);
+            premiumRates.put(CATEGORIES[i], 0.0);
+            if (i < 8) {
+                normalRates.put(CATEGORIES[i],0.0);
+            }
+            if (i < 9) {
+                VIPRates.put(CATEGORIES[i],0.0);
+            }
+        }
+    }
+
+    public String[] getSentences(char typeRoom) {
+        if (typeRoom == 'N') {
+            return normalRooms[0][0].getSENTENCES();
+        } else if (typeRoom == 'V') {
+            return VIPRooms[0][0].getSENTENCES();
+        } else
+            return premiumRooms[0][0].getSENTENCES();
     }
 
     public boolean verifyRate(double rate) {
@@ -448,17 +412,5 @@ public class Housing {
 
     public Room[][] getNormalRooms() {
         return normalRooms;
-    }
-
-    public double[] getNormalRates() {
-        return normalRates;
-    }
-
-    public double[] getVIPRates() {
-        return VIPRates;
-    }
-
-    public double[] getPremiumRates() {
-        return premiumRates;
     }
 }

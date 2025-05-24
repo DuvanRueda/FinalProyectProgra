@@ -1,5 +1,9 @@
 package co.edu.uptc.model;
-
+/*
+ * Author: Duvan Steven Rueda Prieto
+ * Date: 18/05/2025
+ * Description: Final project of Progamacion I, about reviews for accommodations.
+ */
 public class VIPRoom extends Room {
 
     private double interiorRate;
