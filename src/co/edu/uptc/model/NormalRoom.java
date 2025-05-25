@@ -5,19 +5,19 @@ package co.edu.uptc.model;
  * Date: 12/05/2025
  * Description: Final project of Progamacion I, about reviews for accommodations.
  */
-public class Room {
+public class NormalRoom {
 
-    private String roomName;
-    private String password;
-    private boolean isFree;
-    private Comment commentsRoom;
-    private double generalRate;
-    private double cleaningRate;
-    private double comfortRate;
-    private double locationRate;
-    private double customerServiceRate;
-    private double qualityRate;
-    private double servicesRate;
+    protected String roomName;
+    protected String password;
+    protected boolean isFree;
+    protected Comment commentsRoom;
+    protected double generalRate;
+    protected double cleaningRate;
+    protected double comfortRate;
+    protected double locationRate;
+    protected double customerServiceRate;
+    protected double qualityRate;
+    protected double servicesRate;
     private final String[] SENTENCES = new String[] {
             "Del 1 al 5, ¿cómo calificarías la limpieza?", 
             "Del 1 al 5, ¿cómo calificarías la comodidad?",
@@ -27,7 +27,7 @@ public class Room {
             "Del 1 al 5, ¿cómo calificarías la funcionalidad de los servicios en la habitación?" 
         };
 
-    public Room(String roomName) {
+    public NormalRoom(String roomName) {
         this.roomName = roomName;
         password = "";
         isFree = true;
@@ -70,9 +70,9 @@ public class Room {
         double temp = (cleaningRate + comfortRate + locationRate + customerServiceRate + qualityRate + servicesRate)
                 / 6;
         if (generalRate != 0) {
-            setGeneralRate((temp + generalRate) / 2);
+            generalRate = (temp + generalRate) / 2;
         } else {
-            setGeneralRate(temp);
+            generalRate = temp;
         }
     }
 

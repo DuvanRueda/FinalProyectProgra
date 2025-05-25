@@ -42,37 +42,36 @@ public class PremiumRoom extends VIPRoom {
         interiorRating(ratings[6]);
         jacuzziRating(ratings[7]);
         generalRating();
-        return "Entrega de habitación exitosa, la habitación: " + getRoomName() + " esta libre.";
+        return "Entrega de habitación exitosa, la habitación: " + roomName + " esta libre.";
     }
 
     @Override
     public void generalRating() {
-        double temp = (getCleaningRate() + getComfortRate() + getLocationRate() + getCustomerServiceRate()
-                + getQualityRate() + getServicesRate() + getInteriorRate() + jacuzziRate) / 8;
-        if (getGeneralRate() != 0) {
-            setGeneralRate((temp + getGeneralRate()) / 2);
+        double temp = (cleaningRate + comfortRate + locationRate + customerServiceRate + qualityRate + servicesRate + interiorRate + jacuzziRate) / 8;
+        if (generalRate != 0) {
+            generalRate = (temp + generalRate) / 2;
         } else {
-            setGeneralRate(temp);
+            generalRate = temp;
         }
     }
 
     @Override
     public double[] getRatings(){
-        return new double[] {getGeneralRate(), getCleaningRate(), getComfortRate(), getLocationRate(), getCustomerServiceRate(), getQualityRate(), getServicesRate(), getInteriorRate(), jacuzziRate};
+        return new double[] {generalRate, cleaningRate, comfortRate, locationRate, customerServiceRate, qualityRate, servicesRate, interiorRate, jacuzziRate};
     }
 
     @Override
     public String myToString() {
-        return "Estadisticas cabaña " + getRoomName() +
-                "\nLimpieza: " + String.format("%.1f",getCleaningRate()) + 
-                "\nComodidad: " + String.format("%.1f",getComfortRate()) + 
-                "\nUbicación de la habitación: " + String.format("%.1f",getLocationRate()) + 
-                "\nAtención del personal: " + String.format("%.1f",getCustomerServiceRate()) + 
-                "\nRelacion calidad/precio: " + String.format("%.1f",getQualityRate()) + 
-                "\nFuncionabilidad de los servicios de la habitación: " + String.format("%.1f",getServicesRate()) +
-                "\nInterior de la habitación: " + String.format("%.1f",getInteriorRate()) +
+        return "Estadisticas cabaña " + roomName +
+                "\nLimpieza: " + String.format("%.1f",cleaningRate) + 
+                "\nComodidad: " + String.format("%.1f",comfortRate) + 
+                "\nUbicación de la habitación: " + String.format("%.1f",locationRate) + 
+                "\nAtención del personal: " + String.format("%.1f",customerServiceRate) + 
+                "\nRelacion calidad/precio: " + String.format("%.1f",qualityRate) + 
+                "\nFuncionabilidad de los servicios de la habitación: " + String.format("%.1f",servicesRate) +
+                "\nInterior de la habitación: " + String.format("%.1f",interiorRate) +
                 "\nJacuzzi: " + String.format("%.1f",jacuzziRate)+ 
-                "\nGeneral: " + String.format("%.1f",getGeneralRate());
+                "\nGeneral: " + String.format("%.1f",generalRate);
     }
 
     public String[] getSENTENCES() {

@@ -81,17 +81,22 @@ public class Presenter {
     public String clientMenu() {
         boolean exitMenu = false;
         do {
-            action = objectIOManager.inputList("¿Qué opcion desea realizar?", "MENU DE CLIENTE.",
-                    new String[] { "Reservar habitación", "Entregar habitación" }).charAt(0);
-            switch (action) {
-                case 'R':
-                    return bookking();
-                case 'E':
-                    return returnRoomMenu();
-
-                default:
-                    exitMenu = true;
-                    return "Saliendo del menu del cliente";
+            try {
+                action = objectIOManager.inputList("¿Qué opcion desea realizar?", "MENU DE CLIENTE.",
+                        new String[] { "Reservar habitación", "Entregar habitación" }).charAt(0);
+                switch (action) {
+                    case 'R':
+                        return bookking();
+                    case 'E':
+                        return returnRoomMenu();
+    
+                    default:
+                        exitMenu = true;
+                        return "Saliendo del menu del cliente";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Saliendo del menu del cliente.";
             }
         } while (!exitMenu);
     }
@@ -190,29 +195,33 @@ public class Presenter {
         boolean exitMenu = false;
         do {
             char action = objectIOManager.inputList("¿Qué opcion desea realizar?", "MENU DE ADMINISTRADOR.", new String[] { "1.Revisar evaluaciones de una habitación en especifico", "2.Revisar la evaluación general de un tipo de habitación", "3 .Mostrar el ranking gobal de los items.", "4.Cambiar el nombre del administrador.", "5.Cambiar la contraseña."}).charAt(0);
-                    switch (action) {
-                case '1':
-                    objectIOManager.showMessage(showRate());
-                    break;
-                case '2':
-                    objectIOManager.showMessage(showRatingTypeRoom());
-                    break;
-                case '3':
-                    objectIOManager.showMessage(objectHousing.showGeneralRates(action));
-                    objectIOManager.showMessage(showGlobalComments());
-                    break;
-                case '4':
-                    if (adminLog())
-                        objectIOManager.showMessage(changeAdminName());
-                    break;
-                case '5':
-                    if (adminLog())
-                        objectIOManager.showMessage(changeAdminPassword());
-                    break;
-                default:
-                    exitMenu = true;
-                    objectIOManager.showMessage("Saliendo al menu general.");
-                    break;
+            try {
+                switch (action) {
+                    case '1':
+                        objectIOManager.showMessage(showRate());
+                        break;
+                    case '2':
+                        objectIOManager.showMessage(showRatingTypeRoom());
+                        break;
+                    case '3':
+                        objectIOManager.showMessage(objectHousing.showGeneralRates(action));
+                        objectIOManager.showMessage(showGlobalComments());
+                        break;
+                    case '4':
+                        if (adminLog())
+                            objectIOManager.showMessage(changeAdminName());
+                        break;
+                    case '5':
+                        if (adminLog())
+                            objectIOManager.showMessage(changeAdminPassword());
+                        break;
+                    default:
+                        exitMenu = true;
+                        objectIOManager.showMessage("Saliendo al menu general.");
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } while (!exitMenu);
     }

@@ -43,7 +43,7 @@ public class Averages {
         return average;
     }
 
-    public HashMap<String, Double> roomAverage(String[] sentences, Room[][] rooms) {
+    public HashMap<String, Double> roomAverage(String[] sentences, NormalRoom[][] rooms) {
         int count = 0;
         HashMap<String,Double> generalRates = new HashMap<>();
         for (int i = 0; i < rooms.length; i++) {

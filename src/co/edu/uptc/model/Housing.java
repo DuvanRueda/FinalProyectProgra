@@ -11,7 +11,7 @@ import java.util.Map;
 public class Housing {
 
     private final String[] CATEGORIES = { "GENERAL", "LIMPIEZA", "COMODIDAD", "UBICACION DE LA HABITACIÓN", "ATENCION DEL PERSONAL", "RELACIÓN CALIDAD/PRECIO", "FUNCIONALIDAD DE LOS SERVICIOS DE LA HABITACIÓN", "INTERIOR", "JACUZZI"};
-    private Room normalRooms[][];
+    private NormalRoom normalRooms[][];
     private VIPRoom VIPRooms[][];
     private PremiumRoom premiumRooms[][];
     private RateManager normalRates;
@@ -50,11 +50,11 @@ public class Housing {
     }
 
     public void createNormalRooms(int rows, int columns) {
-        normalRooms = new Room[rows][columns];
+        normalRooms = new NormalRoom[rows][columns];
         int countCreateRoom = 1;
         for (int i = 0; i < normalRooms.length; i++) {
             for (int j = 0; j < normalRooms[0].length; j++) {
-                normalRooms[i][j] = new Room("N" + countCreateRoom);
+                normalRooms[i][j] = new NormalRoom("N" + countCreateRoom);
                 countCreateRoom++;
             }
         }
@@ -93,7 +93,7 @@ public class Housing {
             return verifyAvailabilityRoom(premiumRooms);
     }
 
-    public boolean verifyAvailabilityRoom(Room[][] rooms) {
+    public boolean verifyAvailabilityRoom(NormalRoom[][] rooms) {
         for (int i = rooms.length - 1; i > -1; i--) {
             for (int j = rooms[0].length - 1; j > -1; j--) {
                 if (rooms[i][j].isFree()) {
@@ -114,7 +114,7 @@ public class Housing {
         }
     }
 
-    public String bookkingRoom(String password, Room[][] rooms) {
+    public String bookkingRoom(String password, NormalRoom[][] rooms) {
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
                 if (rooms[i][j].isFree()) {
@@ -129,7 +129,7 @@ public class Housing {
     }
 
     public boolean returnRoom(String nameRoom, String password) {
-        if (nameRoom == null) {
+        if (nameRoom == null || nameRoom.equals("")) {
             return false;
         } else if (nameRoom.charAt(0) == 'N') {
             return returnRoom(nameRoom, password, normalRooms);
@@ -140,7 +140,7 @@ public class Housing {
 
     }
 
-    public boolean returnRoom(String nameRoom, String password, Room[][] rooms) {
+    public boolean returnRoom(String nameRoom, String password, NormalRoom[][] rooms) {
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
                 if (!rooms[i][j].isFree() && rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)
@@ -163,7 +163,7 @@ public class Housing {
             return makeRatingRoom(ratings, nameRoom, comment, premiumRooms);
     }
 
-    public String makeRatingRoom(double[] ratings, String nameRoom, String comment, Room[][] rooms) {
+    public String makeRatingRoom(double[] ratings, String nameRoom, String comment, NormalRoom[][] rooms) {
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
                 if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
@@ -182,7 +182,7 @@ public class Housing {
 
     //METODOS USADOS INDIRECTAMENTE POR EL USUARIO 
 
-    private void roomAverage(Room[][] rooms) {
+    private void roomAverage(NormalRoom[][] rooms) {
         HashMap<String, Double> average = objectAverages.roomAverage(CATEGORIES, rooms);
         int sizeRates = average.size();
         if (sizeRates == 7) {
@@ -225,7 +225,7 @@ public class Housing {
             return showCommentsTypeRoom(premiumRooms);
     }
 
-    public String showCommentsTypeRoom(Room[][] rooms) {
+    public String showCommentsTypeRoom(NormalRoom[][] rooms) {
         resultProcess = "";
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
@@ -244,7 +244,7 @@ public class Housing {
             return showCommentsRoom(premiumRooms, nameRoom);
     }
 
-    public String showCommentsRoom(Room[][] rooms, String nameRoom) {
+    public String showCommentsRoom(NormalRoom[][] rooms, String nameRoom) {
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
                 if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
@@ -264,7 +264,7 @@ public class Housing {
             return showRateRoom(premiumRooms, nameRoom);
     }
 
-    public String showRateRoom(Room[][] rooms, String nameRoom) {
+    public String showRateRoom(NormalRoom[][] rooms, String nameRoom) {
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
                 if (rooms[i][j].getRoomName().equalsIgnoreCase(nameRoom)) {
@@ -325,7 +325,7 @@ public class Housing {
         return normalRooms[0][0].verifyRate(rate);
     }
 
-    public Room[][] getNormalRooms() {
+    public NormalRoom[][] getNormalRooms() {
         return normalRooms;
     }
 }
