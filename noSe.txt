@@ -1,5 +1,8 @@
-aberiguar
-Colection.sort() 
+averiguar
 Map.Entry<>
 .setEntry()
 String.format("%.1f")
+Function<String, Room> roomCreator
+roomCreator.aply(roomName)
+Room::new
+return (action que se validara) ? devuleve x valor si es true : devulve y si es falso

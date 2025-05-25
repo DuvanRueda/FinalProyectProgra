@@ -5,7 +5,7 @@ package co.edu.uptc.model;
  * Date: 12/05/2025
  * Description: Final project of Progamacion I, about reviews for accommodations.
  */
-public class NormalRoom {
+public class Room {
 
     protected String roomName;
     protected String password;
@@ -27,7 +27,7 @@ public class NormalRoom {
             "Del 1 al 5, ¿cómo calificarías la funcionalidad de los servicios en la habitación?" 
         };
 
-    public NormalRoom(String roomName) {
+    public Room(String roomName) {
         this.roomName = roomName;
         password = "";
         isFree = true;
@@ -129,7 +129,8 @@ public class NormalRoom {
     }
 
     public String myToString() {
-        return "Estadisticas cabaña " + roomName +
+        return commentsRoom.isEmpty() ? "No hay comentarios aun." : 
+                "Estadisticas cabaña " + roomName +
                 "\nLimpieza: " + String.format("%.1f",cleaningRate) + 
                 "\nComodidad: " + String.format("%.1f",comfortRate) + 
                 "\nUbicación de la habitación: " + String.format("%.1f",locationRate) + 

@@ -25,4 +25,8 @@ public class Comment {
         }
         return reseulString;
     }
+
+    public boolean isEmpty() {
+        return reviews.isEmpty();
+    }
 }

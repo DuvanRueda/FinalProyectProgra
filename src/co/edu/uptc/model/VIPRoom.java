@@ -4,7 +4,7 @@ package co.edu.uptc.model;
  * Date: 18/05/2025
  * Description: Final project of Progamacion I, about reviews for accommodations.
  */
-public class VIPRoom extends NormalRoom {
+public class VIPRoom extends Room {
 
     protected double interiorRate;
     private final String[] SENTENCES = new String[] {
@@ -60,7 +60,8 @@ public class VIPRoom extends NormalRoom {
 
     @Override
     public String myToString() {
-        return "Estadisticas cabaña " + roomName +
+        return commentsRoom.isEmpty() ? "No hay comentarios aun." : 
+                "Estadisticas cabaña " + roomName +
                 "\nLimpieza: " + String.format("%.1f",cleaningRate) + 
                 "\nComodidad: " + String.format("%.1f",comfortRate) + 
                 "\nUbicación de la habitación: " + String.format("%.1f",locationRate) + 

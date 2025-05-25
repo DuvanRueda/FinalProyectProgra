@@ -25,14 +25,17 @@ public class Presenter {
         objectHousing = new Housing();
     }
 
-    public void requestNumberRooms(char typeRoom) {
+    public void requestNumberRooms(String typeRoom) {
         boolean isCorrectRooms = false;
         int numberRoomRows = 0;
         do {
             try {
                 numberRoomRows = Integer.parseInt(objectIOManager.inputData("Ingrese la cantidad de habitaciones " + typeRoom + " por columna que tiene su alojamiento.\n(Filas de habitaciones.)"));
                 int numberRoomColumns = Integer.parseInt(objectIOManager.inputData("Ingrese la cantidad de habitaciones " + typeRoom + " por fila que tiene su alojamiento.\n(Columnas de habitaciones.)"));
-                isCorrectRooms = objectHousing.initRooms(typeRoom, numberRoomRows, numberRoomColumns);
+                isCorrectRooms = objectHousing.initRooms(typeRoom.charAt(0), numberRoomRows, numberRoomColumns);
+                if (!isCorrectRooms) {
+                    objectIOManager.showMessage("No puede crear matices de de 0 filas o 0 columnas");
+                }
             } catch (NumberFormatException e) {
                 objectIOManager.showMessage("Ha ingresado un dato inesperado, vuelva a ingresar el numero de las habitaciones " + typeRoom);
             }
@@ -41,9 +44,9 @@ public class Presenter {
     }
 
     public void createRooms() {
-        requestNumberRooms('N');
-        requestNumberRooms('V');
-        requestNumberRooms('P');
+        requestNumberRooms("Normales");
+        requestNumberRooms("VIP");
+        requestNumberRooms("Premium");
     }
 
     public void menuLog() {
@@ -120,9 +123,6 @@ public class Presenter {
         if (!objectHousing.verifyAvailabilityRoom(typeRoom))
             return "Lo sentimos mucho, en este momento no hay habitaciones normales disponibles en este momento.";
         password = objectIOManager.inputData("Ingrese la contraseña que desea ponerle a su habitación en su instancia.\nLa contraseña debe contar con mínimo 3 letras y 2 números.");
-        if (!objectHousing.getNormalRooms()[0][0].verifyPassword(password)) {
-            return "La contraseña no cumple con los requisitos pedidos";
-        }
         return objectHousing.bookkingRoom(typeRoom, password);
     }
 
@@ -319,8 +319,7 @@ public class Presenter {
     }
 
     public void init() {
-        objectIOManager.showMessage(
-                "El siguiente programa esta pensado para que el alojamiento cuente con sistema de \nreview y pueda tener retroalimentación por parte de los huespedes.");
+        objectIOManager.showMessage("El siguiente programa esta pensado para que el alojamiento cuente con sistema de \nreview y pueda tener retroalimentación por parte de los huespedes.");
         createRooms();
         menuLog();
     }
