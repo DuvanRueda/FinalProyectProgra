@@ -76,7 +76,7 @@ public class RateManager {
         this.rates = rates;
     }
 
-    public Double getRate(String category) {
+    public double getRate(String category) {
         return rates.get(category);
     }
 

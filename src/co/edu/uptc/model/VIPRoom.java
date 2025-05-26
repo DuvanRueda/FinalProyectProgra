@@ -60,8 +60,7 @@ public class VIPRoom extends Room {
 
     @Override
     public String myToString() {
-        return commentsRoom.isEmpty() ? "No hay comentarios aun." : 
-                "Estadisticas cabaña " + roomName +
+        return "Estadisticas cabaña " + roomName +
                 "\nLimpieza: " + String.format("%.1f",cleaningRate) + 
                 "\nComodidad: " + String.format("%.1f",comfortRate) + 
                 "\nUbicación de la habitación: " + String.format("%.1f",locationRate) + 

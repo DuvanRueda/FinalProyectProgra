@@ -100,7 +100,7 @@ public class Housing {
         for (int i = 0; i < CATEGORIES.length-1; i++) {
             double[] rates;
             if (i == 7) {
-                rates = new double[] {0, normalRooms.getEspecificRate(i) , premiumRooms.getEspecificRate(i)};
+                rates = new double[] {0, VIPRooms.getEspecificRate(i) , premiumRooms.getEspecificRate(i)};
             } else {
                 rates = new double[] { normalRooms.getEspecificRate(i), VIPRooms.getEspecificRate(i), premiumRooms.getEspecificRate(i)};
             }

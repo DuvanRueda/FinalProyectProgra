@@ -13,8 +13,8 @@ public class RoomsManager {
 
     public RoomsManager(int size){
         resultProcess = "";
-        rates = new RateManager(size, CATEGORIES);
         objectAverages = new Averages();
+        rates = new RateManager(size, CATEGORIES);
     }
 
     public void createRooms(int rows, int columns, char prefix, Function<String, Room> roomCreator) {
@@ -41,8 +41,9 @@ public class RoomsManager {
     }
 
     public String bookkingRoom(String password) {
-        if (!rooms[0][0].verifyPassword(password)) {
-            return "La contraseña no cumple con los requisitos pedidos";
+        resultProcess = rooms[0][0].verifyPassword(password);
+        if (resultProcess != "true") {
+            return resultProcess;
         }
         for (int i = 0; i < rooms.length; i++) {
             for (int j = 0; j < rooms[0].length; j++) {
@@ -79,7 +80,6 @@ public class RoomsManager {
                         rooms[i][j].addComment(comment);
                     resultProcess = rooms[i][j].makeRating(ratings);
                     roomAverage();
-                    // globalAverage();
                     return resultProcess;
                 }
             }

@@ -1,5 +1,7 @@
 package co.edu.uptc.model;
 
+import co.edu.uptc.exceptionOwn.InvalidInputClientException;
+
 /*
  * Author: Duvan Steven Rueda Prieto
  * Date: 12/05/2025
@@ -41,12 +43,17 @@ public class Room {
         servicesRate = 0;
     }
 
-    public boolean verifyPassword(String password) {
-        String passwordRegex = "^(?=(?:[^A-Za-záéíóúÁÉÍÓÚñÑ]*[A-Za-záéíóúÁÉÍÓÚñÑ]){3,})(?=(?:[^0-9]*[0-9]){2,})[A-Za-záéíóúÁÉÍÓÚñÑ0-9]+$";
-        if (password.matches(passwordRegex)) {
-            return true;
+    public String verifyPassword(String password) {
+        try{
+            String passwordRegex = "^(?=(?:[^A-Za-z]*[A-Za-z]){3,})(?=(?:[^0-9]*[0-9]){2,})[A-Za-z0-9]+$";
+            if (!password.matches(passwordRegex)) {
+                throw new InvalidInputClientException(password);
+            }else{
+                return "true";
+            }
+        } catch (InvalidInputClientException e) {
+            return e.getMessage();
         }
-        return false;
     }
 
     public boolean verifyRate(double rate){
@@ -129,8 +136,7 @@ public class Room {
     }
 
     public String myToString() {
-        return commentsRoom.isEmpty() ? "No hay comentarios aun." : 
-                "Estadisticas cabaña " + roomName +
+        return "Estadisticas cabaña " + roomName +
                 "\nLimpieza: " + String.format("%.1f",cleaningRate) + 
                 "\nComodidad: " + String.format("%.1f",comfortRate) + 
                 "\nUbicación de la habitación: " + String.format("%.1f",locationRate) + 

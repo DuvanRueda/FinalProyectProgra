@@ -221,7 +221,7 @@ public class Presenter {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                objectIOManager.showMessage("Volviendo al menu principal del Administrador");
             }
         } while (!exitMenu);
     }
@@ -253,7 +253,8 @@ public class Presenter {
                 "¿Desea revisar todos los comentarios de este tipo de habitaciones?", null,
                 new String[] { "SI", "NO" });
         if (actionInt == 0) {
-            return objectHousing.showGlobalComments();
+            resultProcess = objectHousing.showGlobalComments();
+            return resultProcess.isEmpty() ? "No hay comentarios aun." : resultProcess;
         } else
             return "Saliendo al menu principal del Administrador.";
     }
@@ -263,7 +264,8 @@ public class Presenter {
                 "¿Desea revisar todos los comentarios de este tipo de habitaciones?", null,
                 new String[] { "SI", "NO" });
         if (actionInt == 0) {
-            return objectHousing.showCommentsTypeRoom(typeRoom);
+            resultProcess = objectHousing.showCommentsTypeRoom(typeRoom); 
+            return resultProcess.isEmpty() ? "No hay comentarios aun." : resultProcess;
         } else
             return "Saliendo al menu principal del Administrador.";
     }
@@ -281,7 +283,8 @@ public class Presenter {
         int actionInt = objectIOManager.bouttonQuestion("¿Desea revisar los comentarios de la habitación?", null,
                 new String[] { "SI", "NO" });
         if (actionInt == 0) {
-            return objectHousing.showCommentsRoom(nameRoom);
+            resultProcess = objectHousing.showCommentsRoom(nameRoom);
+            return resultProcess.isEmpty()? "No hay comentarios aun." : resultProcess;
         } else
             return "Saliendo al menu principal del Administrador.";
 
